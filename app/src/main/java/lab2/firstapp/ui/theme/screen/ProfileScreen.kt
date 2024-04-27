@@ -41,6 +41,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -82,12 +83,15 @@ fun ProfileScreen(){
     }
     val context = LocalContext.current
     //LocalTextInputService provides null
-    val datePickerState = rememberDatePickerState(initialSelectedDateMillis = 99)
+    val datePickerState = rememberDatePickerState()
     var openCalendar by remember {
         mutableStateOf(false)
     }
     var showDate by remember {
         mutableStateOf(false)
+    }
+    var DOB by remember {
+        mutableStateOf("2022-02-23")
     }
 
 
@@ -142,7 +146,9 @@ fun ProfileScreen(){
                 value = dropDownGender,
                 onValueChange = { dropDownGender = it },
                 isError = false,
+                enabled = false,
                 readOnly = true,
+                //colors = TextFieldColors,
                 placeholder = { Text(text = "female") },
                 label = { Text(text = "Gender") },
                 trailingIcon = {
@@ -186,12 +192,16 @@ fun ProfileScreen(){
 
 
         TextField(
-            value = formatDate(datePickerState),
+            value = 
+                //formatDateFromString(DOB)
+                //val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+                 "${LocalDate.parse(DOB).year.toString()} ${LocalDate.parse(DOB).month.toString()} ${LocalDate.parse(DOB).dayOfMonth.toString()}"
+            ,
             onValueChange = {},
             readOnly = true,
             isError = false,
             label = { Text(text = "Date")},
-            placeholder = { formatDate(datePickerState) },
+            placeholder = { },
             trailingIcon = {
                 Icon(
                     Icons.Default.MoreVert,
@@ -207,7 +217,12 @@ fun ProfileScreen(){
                 onDismissRequest = {openCalendar = false},
                 confirmButton = {
                     Button(
-                        onClick = {showDate = true; openCalendar = false}
+                        onClick = {showDate = true; openCalendar = false
+
+                            val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+                            val dateString: String = formatter.format(datePickerState.selectedDateMillis)
+                            DOB = dateString
+                        }
                     )
                     {
                         Text(text = "Confirm Birthdate")
@@ -283,6 +298,11 @@ fun formatDate(state: DatePickerState): String {
     return "${LocalDate.parse(dateString).year.toString()} ${LocalDate.parse(dateString).month.toString()} ${LocalDate.parse(dateString).dayOfMonth.toString()}"
 }
 
+fun formatDateFromString(date: String): String {
+    //val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
+    //val dateString: String = formatter.format(state.selectedDateMillis)
+    return "${LocalDate.parse(date).year} ${LocalDate.parse(date).month.toString()} ${LocalDate.parse(date).dayOfMonth.toString()}"
+}
 @Composable
 fun ProfileImage() {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
@@ -332,7 +352,7 @@ fun ProfileImage() {
             modifier = Modifier
                 .size(100.dp)
                 .clip(CircleShape)
-                .border(2.dp,PrimaryRed, CircleShape)
+                .border(2.dp, PrimaryRed, CircleShape)
                 .clickable { launcher.launch("image/*") }
         )
     }

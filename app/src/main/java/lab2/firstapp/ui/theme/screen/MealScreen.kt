@@ -21,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -44,7 +45,6 @@ fun MealScreen(){
         modifier = Modifier
             .fillMaxSize()
             .wrapContentWidth()
-            .verticalScroll(rememberScrollState())
     ) {
         Text(
             text = "Healthy Meal Ideas",
@@ -53,16 +53,18 @@ fun MealScreen(){
             color = Color.Black,
             modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
         )
-    //}
+        //}
         LazyRow {
-            items(AllMeals.meals) {
-                meal -> MealCard(meal = meal)
+            items(AllMeals.meals) { meal ->
+                MealCard(meal = meal)
             }
         }
+        Divider()
+
         // ovdje crasha ako stavim lazy column a treba mi lazy column
-        LazyRow {
-            items(AllMeals.meals) {
-                meal -> BigMealCard(meal = meal)
+        LazyColumn() {
+            items(AllMeals.meals) { meal ->
+                BigMealCard(meal = meal)
             }
         }
     }
@@ -134,9 +136,10 @@ fun BigMealCard(meal: Meal) {
                 Text(text = meal.name, fontSize = 18.sp)
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(text = "Calories: ${meal.calories}", fontSize = 16.sp)
+                //Text(text = meal.ingredientArray.toString())
                 TextList(strings = meal.ingredientArray)
                 Spacer(modifier = Modifier.height(10.dp))
-                TextList(strings = meal.directionsArray)
+                //TextList(strings = meal.directionsArray)
             }
 
         }
@@ -145,9 +148,14 @@ fun BigMealCard(meal: Meal) {
 
 @Composable
 fun TextList(strings: Array<String>) {
-    LazyColumn {
-        items(strings) { string ->
-            Text(text = string)
-        }
+//    LazyColumn {
+//        items(strings) { string ->
+//            Text(text = string)
+//        }
+//    }
+    var arrayMeals: String = ""
+    strings.map {
+        arrayMeals = arrayMeals + ", $it"
     }
+    Text(text = arrayMeals )
 }

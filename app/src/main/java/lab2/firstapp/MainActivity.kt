@@ -25,9 +25,9 @@ class MainActivity : ComponentActivity() {
                 ) {
                     //LoginScreen(this)
                     //RegistrationScreen()
-                    //ProfileScreen()
+                    ProfileScreen()
                     //PreferenceScreen()
-                    MealScreen()
+                    //MealScreen()
                 }
 
             }
