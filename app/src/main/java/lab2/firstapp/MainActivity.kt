@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import lab2.firstapp.ui.theme.FirstApplicationTheme
+import lab2.firstapp.ui.theme.PrimaryRed
 import lab2.firstapp.ui.theme.SecondaryPurple
 import lab2.firstapp.ui.theme.screen.LoginScreen
 import lab2.firstapp.ui.theme.screen.MealScreen
@@ -25,9 +26,9 @@ class MainActivity : ComponentActivity() {
                 ) {
                     //LoginScreen(this)
                     //RegistrationScreen()
-                    ProfileScreen()
+                    //ProfileScreen()
                     //PreferenceScreen()
-                    //MealScreen()
+                    MealScreen()
                 }
 
             }

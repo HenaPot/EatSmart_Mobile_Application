@@ -21,6 +21,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import lab2.firstapp.model.ActivityLevel
 import lab2.firstapp.model.DietaryPlan
 import lab2.firstapp.model.FitnessPlan
+import lab2.firstapp.ui.theme.PrimaryRed
 
 @Composable
 fun PreferenceScreen(){
@@ -54,7 +58,7 @@ fun PreferenceScreen(){
         mutableStateOf("maintain weight")
     }
     var weight by remember {
-        mutableStateOf("55")
+        mutableStateOf("")
     }
     var expandedActivityLevel by remember {
         mutableStateOf(false)
@@ -63,7 +67,7 @@ fun PreferenceScreen(){
         mutableStateOf("lightly active")
     }
     var height by remember {
-        mutableStateOf("1.65")
+        mutableStateOf("")
     }
 
     Column(
@@ -77,7 +81,8 @@ fun PreferenceScreen(){
             text = "Preferences",
             fontSize = 30.sp,
             fontFamily = FontFamily.Cursive,
-            color = Color.Black
+            fontWeight = FontWeight.Bold,
+            color = PrimaryRed
         )
 
         Spacer(modifier = Modifier.size(height = 55.dp, width = 0.dp))
@@ -87,6 +92,10 @@ fun PreferenceScreen(){
             onValueChange = {weight = it},
             isError = false,
             enabled = true,
+            colors = TextFieldDefaults.colors(
+                focusedPlaceholderColor = Color.Gray,
+                unfocusedPlaceholderColor = Color.Gray
+            ),
             label = { Text(text = "Weight in kg")},
             placeholder = { Text(text = "55")},
             keyboardOptions = KeyboardOptions(
@@ -102,11 +111,15 @@ fun PreferenceScreen(){
             onValueChange = {height = it},
             isError = false,
             enabled = true,
+            colors = TextFieldDefaults.colors(
+                focusedPlaceholderColor = Color.Gray,
+                unfocusedPlaceholderColor = Color.Gray
+            ),
             label = { Text(text = "Height in m")},
             placeholder = { Text(text = "1.65")},
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
+                imeAction = ImeAction.Done
             )
         )
 
@@ -119,7 +132,12 @@ fun PreferenceScreen(){
                 placeholder = { Text(text = "carnivore") },
                 label = { Text(text = "Dietary Plan") },
                 isError = false,
-                enabled = true,
+                enabled = false,
+                colors = TextFieldDefaults.colors(
+                    disabledTextColor = Color.Black,
+                    disabledLabelColor = Color.Black,
+                    disabledTrailingIconColor = Color.Black
+                ),
                 readOnly = true,
                 trailingIcon = {
                     Icon(
@@ -156,7 +174,12 @@ fun PreferenceScreen(){
                 label = { Text(text = "Fitness Plan")},
                 isError = false,
                 readOnly = true,
-                enabled = true,
+                enabled = false,
+                colors = TextFieldDefaults.colors(
+                    disabledTextColor = Color.Black,
+                    disabledLabelColor = Color.Black,
+                    disabledTrailingIconColor = Color.Black
+                ),
                 trailingIcon = {
                     Icon(
                         Icons.Default.MoreVert,
@@ -191,6 +214,12 @@ fun PreferenceScreen(){
                 onValueChange = {dropDownActivityLevel = it},
                 readOnly = true,
                 isError = false,
+                enabled = false,
+                colors = TextFieldDefaults.colors(
+                    disabledTextColor = Color.Black,
+                    disabledLabelColor = Color.Black,
+                    disabledTrailingIconColor = Color.Black
+                ),
                 label = { Text(text = "Activity Level")},
                 placeholder = { Text(text = "lightly active")},
                 trailingIcon = {

@@ -42,6 +42,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -148,7 +149,11 @@ fun ProfileScreen(){
                 isError = false,
                 enabled = false,
                 readOnly = true,
-                //colors = TextFieldColors,
+                colors = TextFieldDefaults.colors(
+                    disabledTextColor = Color.Black,
+                    disabledLabelColor = Color.Black,
+                    disabledTrailingIconColor = Color.Black
+                ),
                 placeholder = { Text(text = "female") },
                 label = { Text(text = "Gender") },
                 trailingIcon = {

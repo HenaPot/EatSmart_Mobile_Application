@@ -1,6 +1,7 @@
 package lab2.firstapp.ui.theme.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,10 +17,7 @@ import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
@@ -30,7 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import lab2.firstapp.model.AllMeals
@@ -49,9 +47,10 @@ fun MealScreen(){
         Text(
             text = "Healthy Meal Ideas",
             fontFamily = FontFamily.Cursive,
+            fontWeight = FontWeight.ExtraBold,
             fontSize = 30.sp,
-            color = Color.Black,
-            modifier = Modifier.padding(top = 10.dp, bottom = 20.dp)
+            color = PrimaryRed,
+            modifier = Modifier.padding(top = 20.dp, bottom = 10.dp)
         )
         //}
         LazyRow {
@@ -61,7 +60,6 @@ fun MealScreen(){
         }
         Divider()
 
-        // ovdje crasha ako stavim lazy column a treba mi lazy column
         LazyColumn() {
             items(AllMeals.meals) { meal ->
                 BigMealCard(meal = meal)
@@ -118,44 +116,46 @@ fun BigMealCard(meal: Meal) {
             containerColor = PrimaryRed
         )
     ) {
-        Row(
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.Start,
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(top = 5.dp, bottom = 5.dp, start = 5.dp, end = 10.dp)
         ) {
+            Text(text = meal.name, fontSize = 18.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 20.dp))
+
+            Spacer(modifier = Modifier.height(20.dp))
+
             Image(
                 painter = painterResource(id = meal.image),
                 contentDescription = meal.name,
-                modifier = Modifier/*.size(115.dp)*/.padding(top = 5.dp),
+                modifier = Modifier/*.size(115.dp)*/.border(2.dp, Color.White).padding(top = 5.dp),
                 contentScale = ContentScale.Crop
             )
-            Spacer(modifier = Modifier.width(20.dp))
-            Column(
 
-            ) {
-                Text(text = meal.name, fontSize = 18.sp)
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(text = "Calories: ${meal.calories}", fontSize = 16.sp)
-                //Text(text = meal.ingredientArray.toString())
-                TextList(strings = meal.ingredientArray)
-                Spacer(modifier = Modifier.height(10.dp))
-                //TextList(strings = meal.directionsArray)
-            }
-
+            Spacer(modifier = Modifier.height(15.dp))
+            Text(text = "Calories: ${meal.calories}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+            Spacer(modifier = Modifier.height(15.dp))
+            ArrayToText(strings = meal.ingredientArray, nameString = "Ingredients")
+            Spacer(modifier = Modifier.height(10.dp))
+            ArrayToText(strings = meal.directionsArray, nameString = "Directions")
         }
+
     }
 }
 
 @Composable
-fun TextList(strings: Array<String>) {
-//    LazyColumn {
-//        items(strings) { string ->
-//            Text(text = string)
-//        }
-//    }
-    var arrayMeals: String = ""
+fun ArrayToText(strings: Array<String>, nameString: String) {
+    var arrayMeals: String = "$nameString: "
     strings.map {
-        arrayMeals = arrayMeals + ", $it"
+        if(arrayMeals == "$nameString: ") {
+            arrayMeals = "$arrayMeals $it"
+        } else if(nameString == "Directions") {
+            arrayMeals = "$arrayMeals $it"
+        }
+        else{
+            arrayMeals = "$arrayMeals, $it"
+        }
+
     }
-    Text(text = arrayMeals )
+    Text(text = arrayMeals, modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp))
 }
