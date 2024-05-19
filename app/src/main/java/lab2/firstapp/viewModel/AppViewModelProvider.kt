@@ -15,6 +15,11 @@ object AppViewModelProvider {
                 EatSmartApplication().container.userRepository
             )
         }
+        initializer {
+            UserViewModel(
+                EatSmartApplication().container.userRepository
+            )
+        }
     }
 }
 

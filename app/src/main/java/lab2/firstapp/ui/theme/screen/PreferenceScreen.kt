@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,13 +39,24 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import lab2.firstapp.model.ActivityLevel
 import lab2.firstapp.model.DietaryPlan
 import lab2.firstapp.model.FitnessPlan
 import lab2.firstapp.ui.theme.PrimaryRed
+import lab2.firstapp.viewModel.AppViewModelProvider
+import lab2.firstapp.viewModel.UserViewModel
 
 @Composable
-fun PreferenceScreen(){
+fun PreferenceScreen(
+    viewModel: UserViewModel = viewModel(factory = AppViewModelProvider.Factory)
+){
+    var uiState = viewModel.userUiState
+    var detailsState = uiState.userDetails
+    val coroutineScope = rememberCoroutineScope()
+
     var expandedDietaryPlan by remember {
         mutableStateOf(false)
     }
@@ -88,8 +100,16 @@ fun PreferenceScreen(){
         Spacer(modifier = Modifier.size(height = 55.dp, width = 0.dp))
         
         TextField(
-            value = weight,
-            onValueChange = {weight = it},
+            value = viewModel.userUiState.userDetails.weight.toString(),
+            onValueChange = {
+                weight = it;
+                viewModel.updateUiState(detailsState.copy(weight = it.toDouble()))
+
+                coroutineScope.launch {
+                    viewModel.updateUser()
+                }
+
+                            },
             isError = false,
             enabled = true,
             colors = TextFieldDefaults.colors(
@@ -107,8 +127,15 @@ fun PreferenceScreen(){
         Spacer(modifier = Modifier.size(height = 15.dp, width = 0.dp))
 
         TextField(
-            value = height,
-            onValueChange = {height = it},
+            value = viewModel.userUiState.userDetails.height.toString(),
+            onValueChange = {
+                height = it;
+                viewModel.updateUiState(detailsState.copy(height = it.toDouble()));
+
+                coroutineScope.launch {
+                    viewModel.updateUser()
+                }
+                            },
             isError = false,
             enabled = true,
             colors = TextFieldDefaults.colors(
@@ -127,7 +154,7 @@ fun PreferenceScreen(){
         
         Box() {
             TextField(
-                value = dropDownDietaryPlan,
+                value = viewModel.userUiState.userDetails.dietaryPlan.dietaryPlan,
                 onValueChange = {dropDownDietaryPlan = it},
                 placeholder = { Text(text = "carnivore") },
                 label = { Text(text = "Dietary Plan") },
@@ -156,8 +183,13 @@ fun PreferenceScreen(){
                 DropdownMenuItem(
                     text = { Text(text = it.dietaryPlan) },
                     onClick = {
-                        dropDownDietaryPlan = it.dietaryPlan
-                        expandedDietaryPlan = false
+                        dropDownDietaryPlan = it.dietaryPlan;
+                        expandedDietaryPlan = false;
+
+                        viewModel.updateUiState(detailsState.copy(dietaryPlan = it));
+                        coroutineScope.launch {
+                            viewModel.updateUser()
+                        }
                     },
                     modifier = Modifier.fillMaxSize()
                 )
@@ -169,7 +201,7 @@ fun PreferenceScreen(){
 
         Box() {
             TextField(
-                value = dropDownFitnessPlan,
+                value = viewModel.userUiState.userDetails.fitnessPlan.fitnessPlan,
                 onValueChange = {dropDownFitnessPlan = it},
                 label = { Text(text = "Fitness Plan")},
                 isError = false,
@@ -199,7 +231,15 @@ fun PreferenceScreen(){
                 -> FitnessPlan.entries.map {
                     DropdownMenuItem(
                         text = { Text(text = it.fitnessPlan)},
-                        onClick = { dropDownFitnessPlan = it.fitnessPlan; expandedFitnessPlan = false},
+                        onClick = {
+                            dropDownFitnessPlan = it.fitnessPlan;
+                            expandedFitnessPlan = false;
+
+                            viewModel.updateUiState(detailsState.copy(fitnessPlan = it));
+                            coroutineScope.launch {
+                                viewModel.updateUser()
+                            }
+                                  },
                         modifier = Modifier.fillMaxSize(),
                     )
                 }
@@ -210,7 +250,7 @@ fun PreferenceScreen(){
 
         Box {
             TextField(
-                value = dropDownActivityLevel,
+                value = viewModel.userUiState.userDetails.activityLevel.activityLevel,
                 onValueChange = {dropDownActivityLevel = it},
                 readOnly = true,
                 isError = false,
@@ -241,7 +281,15 @@ fun PreferenceScreen(){
                 -> ActivityLevel.entries.map {
                     DropdownMenuItem(
                         text = { Text(text = it.activityLevel)},
-                        onClick = {expandedActivityLevel = false; dropDownActivityLevel = it.activityLevel},
+                        onClick = {
+                            expandedActivityLevel = false;
+                            dropDownActivityLevel = it.activityLevel
+
+                            viewModel.updateUiState(detailsState.copy(activityLevel = it));
+                            coroutineScope.launch{
+                                viewModel.updateUser()
+                            }
+                                  },
                         modifier = Modifier.fillMaxSize()
                     )
                 }

@@ -33,7 +33,20 @@ class LoginRegistrationViewModel(private val userRepository: UserRepository): Vi
         }
     }
 
-    /*private*/ suspend fun checkEmail(): Boolean{
+    suspend fun register(): Boolean{
+        if(validateInput()){
+            userRepository.insert(userUiState.userDetails.toUser())
+            return true
+        }else return false
+    }
+
+    private suspend fun validateInput(uiState: UserDetails = userUiState.userDetails): Boolean {
+        return with(uiState) {
+            checkEmail()
+        }
+    }
+
+    private suspend fun checkEmail(): Boolean{
         return userRepository.getUserByEmail(userUiState.userDetails.email).first()
             ?.toUserUiState()?.userDetails?.email?.isEmpty() ?: true
     }

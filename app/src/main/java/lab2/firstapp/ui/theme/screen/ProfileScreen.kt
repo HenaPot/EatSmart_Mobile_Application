@@ -6,6 +6,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,7 +29,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
@@ -41,18 +41,17 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -60,17 +59,27 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import lab2.firstapp.R
 import lab2.firstapp.model.Gender
 import lab2.firstapp.ui.theme.PrimaryRed
-import java.nio.file.WatchEvent
+import lab2.firstapp.viewModel.AppViewModelProvider
+import lab2.firstapp.viewModel.UserViewModel
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(){
+fun ProfileScreen(
+    viewModel: UserViewModel = viewModel(factory = AppViewModelProvider.Factory)
+){
+    var uiState = viewModel.userUiState
+    var detailsState = uiState.userDetails
+    val coroutineScope = rememberCoroutineScope()
+
     var name = "Hena"
     var surname = "Potogija"
     var email = "potogijahena@gmail.com"
@@ -95,6 +104,7 @@ fun ProfileScreen(){
         mutableStateOf("2022-02-23")
     }
 
+    Log.d("profile", viewModel.userUiState.toString() )
 
     Column(
         modifier = Modifier
@@ -112,7 +122,7 @@ fun ProfileScreen(){
 
         Row {
             TextField(
-                value = name,
+                value = viewModel.userUiState.userDetails.name,
                 onValueChange = {},
                 label = { Text(text = "name") },
                 isError = false,
@@ -122,7 +132,7 @@ fun ProfileScreen(){
             Spacer(modifier = Modifier.size(width = 5.dp, height = 0.dp))
 
             TextField(
-                value = surname,
+                value = viewModel.userUiState.userDetails.surname,
                 onValueChange = {},
                 label = { Text(text = "surname") },
                 isError = false,
@@ -133,7 +143,7 @@ fun ProfileScreen(){
         Spacer(modifier = Modifier.size(width = 0.dp, height = 15.dp))
 
         TextField(
-            value = email,
+            value = viewModel.userUiState.userDetails.email,
             onValueChange = {},
             label = { Text(text = "email") },
             isError = false,
@@ -144,7 +154,7 @@ fun ProfileScreen(){
 
         Box {
             TextField(
-                value = dropDownGender,
+                value = viewModel.userUiState.userDetails.gender.gender,
                 onValueChange = { dropDownGender = it },
                 isError = false,
                 enabled = false,
@@ -186,6 +196,10 @@ fun ProfileScreen(){
                         onClick = {
                             dropDownGender = it.gender;
                             expandedGender = false;
+                            viewModel.updateUiState(detailsState.copy(gender = it));
+                            coroutineScope.launch {
+                                viewModel.updateUser()
+                            }
                         },
                         modifier = Modifier.fillMaxSize()
                     )
@@ -200,12 +214,13 @@ fun ProfileScreen(){
             value = 
                 //formatDateFromString(DOB)
                 //val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
-                 "${LocalDate.parse(DOB).year.toString()} ${LocalDate.parse(DOB).month.toString()} ${LocalDate.parse(DOB).dayOfMonth.toString()}"
+                 //"${LocalDate.parse(DOB).year.toString()} ${LocalDate.parse(DOB).month.toString()} ${LocalDate.parse(DOB).dayOfMonth.toString()}"
+                viewModel.userUiState.userDetails.dateOfBirth
             ,
             onValueChange = {},
             readOnly = true,
             isError = false,
-            label = { Text(text = "Date")},
+            label = { Text(text = "Date of Birth")},
             placeholder = { },
             trailingIcon = {
                 Icon(
@@ -226,7 +241,12 @@ fun ProfileScreen(){
 
                             val formatter: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd")
                             val dateString: String = formatter.format(datePickerState.selectedDateMillis)
-                            DOB = dateString
+                            DOB = dateString;
+
+                            viewModel.updateUiState(detailsState.copy(dateOfBirth = DOB));
+                            coroutineScope.launch {
+                                viewModel.updateUser()
+                            }
                         }
                     )
                     {
@@ -240,6 +260,14 @@ fun ProfileScreen(){
                 )
             }
         }
+
+        Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))
+
+        Text(
+            text = "Contact Us",
+            color = PrimaryRed,
+            fontSize = 16.sp
+        )
 
         Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))
 

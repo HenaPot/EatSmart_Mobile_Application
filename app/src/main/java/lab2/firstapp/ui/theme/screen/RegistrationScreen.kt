@@ -1,5 +1,6 @@
 package lab2.firstapp.ui.theme.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
@@ -40,11 +42,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import lab2.firstapp.R
 import lab2.firstapp.ui.theme.TertiaryColor
+import lab2.firstapp.viewModel.AppViewModelProvider
+import lab2.firstapp.viewModel.LoginRegistrationViewModel
 
 @Composable
-fun RegistrationScreen(){
+fun RegistrationScreen(
+    viewModel: LoginRegistrationViewModel = viewModel(factory = AppViewModelProvider.Factory)
+){
+    val coroutineScope = rememberCoroutineScope()
+    var uiState = viewModel.userUiState
+    var detailsState = uiState.userDetails
+
     var name by remember {
         mutableStateOf("")
     }
@@ -100,7 +112,10 @@ fun RegistrationScreen(){
 
         TextField(
             value = name,
-            onValueChange = {name = it},
+            onValueChange = {
+                name = it;
+                viewModel.updateUiState(detailsState.copy(name = it))
+                            },
             isError = false,
             enabled = true,
             label = { Text(text = "name")},
@@ -115,7 +130,10 @@ fun RegistrationScreen(){
 
         TextField(
             value = surname,
-            onValueChange = {surname = it},
+            onValueChange = {
+                surname = it;
+                viewModel.updateUiState(detailsState.copy(surname = it))
+                            },
             isError = false,
             enabled = true,
             label = { Text(text = "surname")},
@@ -130,7 +148,10 @@ fun RegistrationScreen(){
 
         TextField(
             value = email,
-            onValueChange = {email = it},
+            onValueChange = {
+                email = it;
+                viewModel.updateUiState(detailsState.copy(email = it))
+                            },
             isError = !checkEmail,
             enabled = true,
             label = { Text(text = "email")},
@@ -145,7 +166,10 @@ fun RegistrationScreen(){
 
         TextField(
             value = password,
-            onValueChange = {password = it},
+            onValueChange = {
+                password = it;
+                viewModel.updateUiState(detailsState.copy(password = it))
+                            },
             isError = false,
             enabled = true,
             label = { Text(text = "password")},
@@ -175,7 +199,7 @@ fun RegistrationScreen(){
 
         TextField(
             value = repeatPassword,
-            onValueChange = {repeatPassword = it},
+            onValueChange = { repeatPassword = it},
             //isError = password!=repeatPassword,
             isError = !checkPassword,
             enabled = true,
@@ -217,6 +241,13 @@ fun RegistrationScreen(){
             Button(onClick = {
                 checkEmail = checkEmail(email);
                 checkPassword = password == repeatPassword;
+                if (checkPassword) {
+                    coroutineScope.launch {
+                        if(viewModel.register()){
+                            Log.d("register", viewModel.userUiState.toString())
+                        }
+                    }
+                }
             }) {
                 Text(text = "Register")
             }

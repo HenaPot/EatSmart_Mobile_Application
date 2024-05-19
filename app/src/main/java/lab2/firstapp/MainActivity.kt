@@ -28,10 +28,10 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = SecondaryPurple
                 ) {
-                    LoginScreen(this)
+                    //LoginScreen(this)
                     //RegistrationScreen()
                     //ProfileScreen()
-                    //PreferenceScreen()
+                    PreferenceScreen()
                     //BrowseMealsScreen()
                     //MealScreen(meal = AllMeals.meals.first())
                     //CalorieScreen()
