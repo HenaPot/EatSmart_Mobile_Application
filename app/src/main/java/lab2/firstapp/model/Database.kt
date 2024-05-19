@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import lab2.firstapp.model.dao.MealDao
 import lab2.firstapp.model.dao.UserDao
 import lab2.firstapp.model.dao.UserMealHistoryDao
@@ -12,6 +13,7 @@ import lab2.firstapp.model.models.User
 import lab2.firstapp.model.models.UserMealHistory
 
 @Database(entities = [User::class, Meal::class, UserMealHistory::class], version = 1, exportSchema = false)
+@TypeConverters(Converters::class)
 abstract class EatSmartDatabase: RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun mealDao(): MealDao
