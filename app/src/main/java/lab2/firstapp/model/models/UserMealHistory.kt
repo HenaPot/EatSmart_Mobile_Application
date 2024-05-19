@@ -20,5 +20,5 @@ data class UserMealHistory(
     val mealId: Int,
 
     @ColumnInfo(name = "timestamp")
-    val timestamp: Timestamp
+    val timestamp: String
 )

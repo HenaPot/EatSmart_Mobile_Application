@@ -1,6 +1,7 @@
 package lab2.firstapp.ui.theme.screen
 
 import android.content.Context
+import android.util.Log
 import android.util.Patterns.EMAIL_ADDRESS
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,13 +42,24 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import lab2.firstapp.ui.theme.SecondaryPurple
 import lab2.firstapp.ui.theme.sendNotification
+import lab2.firstapp.viewModel.AppViewModelProvider
+import lab2.firstapp.viewModel.LoginRegistrationViewModel
 
 
 //@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(context: Context) {
+fun LoginScreen(
+    context: Context,
+    viewModel: LoginRegistrationViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    ) {
+
+    val coroutineScope = rememberCoroutineScope()
+    var uiState = viewModel.userUiState
+    var detailsState = uiState.userDetails
 
     var email by remember {
         mutableStateOf("")
@@ -95,7 +108,10 @@ fun LoginScreen(context: Context) {
 
         TextField(
             value = email,
-            onValueChange = {email = it},
+            onValueChange = {
+                email = it;
+                viewModel.updateUiState(detailsState.copy(email = it))
+                            },
             enabled = true,
             label = {
                     Text(text = "email")
@@ -115,7 +131,10 @@ fun LoginScreen(context: Context) {
 
         TextField(
             value = password,
-            onValueChange = {password = it},
+            onValueChange = {
+                password = it;
+                viewModel.updateUiState(detailsState.copy(password = it))
+                            },
             label = {Text(text = "password")},
             isError = false,
             enabled = true,
@@ -161,7 +180,16 @@ fun LoginScreen(context: Context) {
 
 
         Button(onClick = {
-            checkEmail = checkEmail(email)
+            //checkEmail = checkEmail(email);
+            coroutineScope.launch {
+                //checkEmail = viewModel.checkEmail();
+                Log.d("pre login", viewModel.userUiState.toString())
+                // LOGIN DOES NOT WORK AND NEVER SHOWS UP IN LOGCAT
+                // pre login shows in logcat and logs user's input
+                if(viewModel.login()){
+                    Log.d("login", viewModel.userUiState.toString())
+                }
+            }
         }) {
             Text(
                 text = "Login",
