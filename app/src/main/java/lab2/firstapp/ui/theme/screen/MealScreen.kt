@@ -25,12 +25,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import lab2.firstapp.R
 import lab2.firstapp.model.Meal
 import lab2.firstapp.ui.theme.PrimaryRed
 import lab2.firstapp.ui.theme.SecondaryPurple
+import lab2.firstapp.viewModel.AppViewModelProvider
+import lab2.firstapp.viewModel.MealViewModel
 
 @Composable
-fun MealScreen(meal: Meal){
+fun MealScreen(
+    viewModel: MealViewModel = viewModel(factory = AppViewModelProvider.Factory)
+){
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -41,13 +47,14 @@ fun MealScreen(meal: Meal){
             .verticalScroll(rememberScrollState())
     ) {
 
-        Text(text = meal.name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = PrimaryRed, modifier = Modifier.padding(top = 20.dp))
+        Text(text = viewModel.mealUiState.mealDetails.name, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = PrimaryRed, modifier = Modifier.padding(top = 20.dp))
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Image(
-            painter = painterResource(id = meal.image),
-            contentDescription = meal.name,
+            //picture will have to be adjusted to draw from DB
+            painter = painterResource(id = R.drawable.meal0),
+            contentDescription = viewModel.mealUiState.mealDetails.name,
             modifier = Modifier/*.size(115.dp)*/
                 .border(2.dp, Color.White)
                 .padding(top = 5.dp),
@@ -55,11 +62,17 @@ fun MealScreen(meal: Meal){
         )
 
         Spacer(modifier = Modifier.height(15.dp))
-        Text(text = "Calories: ${meal.calories}", color = PrimaryRed, fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        Text(text = "Calories: ${viewModel.mealUiState.mealDetails.calories}", color = PrimaryRed, fontSize = 16.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(15.dp))
-        ArrayToText(strings = meal.ingredientArray, nameString = "Ingredients", PrimaryRed, true)
+        //ArrayToText(strings = meal.ingredientArray, nameString = "Ingredients", PrimaryRed, true)
+        Text(text = "Ingredients", color = PrimaryRed)
+        Text(text = viewModel.mealUiState.mealDetails.ingredientArray, color = PrimaryRed, modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp))
+
         Spacer(modifier = Modifier.height(15.dp))
-        ArrayToText(strings = meal.directionsArray, nameString = "Directions", PrimaryRed, true)
+        //ArrayToText(strings = meal.directionsArray, nameString = "Directions", PrimaryRed, true)
+        Text(text = "Directions", color = PrimaryRed)
+        Text(text = viewModel.mealUiState.mealDetails.directionString, color = PrimaryRed, modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp))
+
         Spacer(modifier = Modifier.height(10.dp))
         Button(
             onClick = { /*TODO*/ },

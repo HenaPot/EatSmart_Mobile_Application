@@ -20,6 +20,16 @@ object AppViewModelProvider {
                 EatSmartApplication().container.userRepository
             )
         }
+        initializer {
+            MealViewModel(
+                EatSmartApplication().container.mealRepository
+            )
+        }
+        initializer {
+            AllMealsViewModel(
+                EatSmartApplication().container.mealRepository
+            )
+        }
     }
 }
 

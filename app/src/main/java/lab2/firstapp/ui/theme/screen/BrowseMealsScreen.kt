@@ -1,5 +1,6 @@
 package lab2.firstapp.ui.theme.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -22,6 +23,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,13 +34,22 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import lab2.firstapp.R
 import lab2.firstapp.model.AllMeals
-import lab2.firstapp.model.Meal
+import lab2.firstapp.model.models.Meal
 import lab2.firstapp.ui.theme.PrimaryRed
 import lab2.firstapp.ui.theme.SecondaryPurple
+import lab2.firstapp.viewModel.AllMealsViewModel
+import lab2.firstapp.viewModel.AppViewModelProvider
 
 @Composable
-fun BrowseMealsScreen(){
+fun BrowseMealsScreen(
+    viewModel: AllMealsViewModel = viewModel(factory = AppViewModelProvider.Factory)
+){
+    val allMealsUiState by viewModel.allMealsUiState.collectAsState()
+    Log.d("all meals", allMealsUiState.mealList.toString())
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -62,13 +74,14 @@ fun BrowseMealsScreen(){
         Divider()*/
 
         LazyColumn() {
-            items(AllMeals.meals) { meal ->
+            items(allMealsUiState.mealList) { meal ->
                 BigMealCard(meal = meal)
             }
         }
     }
 }
 
+/*
 @Composable
 fun MealCard(meal: Meal){
     Card(
@@ -89,7 +102,7 @@ fun MealCard(meal: Meal){
             modifier = Modifier.padding(top = 5.dp, bottom = 5.dp, start = 5.dp, end = 10.dp)
         ) {
             Image(
-                painter = painterResource(id = meal.image),
+                painter = painterResource(id = R.drawable.meal0),
                 contentDescription = meal.name,
                 modifier = Modifier
                     .size(110.dp)
@@ -104,7 +117,7 @@ fun MealCard(meal: Meal){
             }
         }
     }
-}
+}*/
 
 @Composable
 fun BigMealCard(meal: Meal) {
@@ -127,7 +140,7 @@ fun BigMealCard(meal: Meal) {
             Spacer(modifier = Modifier.height(20.dp))
 
             Image(
-                painter = painterResource(id = meal.image),
+                painter = painterResource(id = R.drawable.meal0),
                 contentDescription = meal.name,
                 modifier = Modifier/*.size(115.dp)*/
                     .border(2.dp, Color.White)
@@ -138,9 +151,15 @@ fun BigMealCard(meal: Meal) {
             Spacer(modifier = Modifier.height(15.dp))
             Text(text = "Calories: ${meal.calories}", fontSize = 16.sp, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(15.dp))
-            ArrayToText(strings = meal.ingredientArray, nameString = "Ingredients")
+            //ArrayToText(strings = meal.ingredientArray, nameString = "Ingredients")
+            Text(text = "Ingredients", color = Color.White)
+            Text(text = meal.ingredientArray, color = Color.White, modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp))
+
             Spacer(modifier = Modifier.height(15.dp))
-            ArrayToText(strings = meal.directionsArray, nameString = "Directions")
+            //ArrayToText(strings = meal.directionsArray, nameString = "Directions")
+            Text(text = "Directions", color = Color.White)
+            Text(text = meal.directionString, color = Color.White, modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp))
+
             Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = { /*TODO*/ },
@@ -156,6 +175,7 @@ fun BigMealCard(meal: Meal) {
     }
 }
 
+/*
 @Composable
 fun ArrayToText(strings: Array<String>, nameString: String, color: Color = Color.White, fullMealDescription: Boolean = false) {
     var arrayMeals: String = "$nameString: "
@@ -176,3 +196,4 @@ fun ArrayToText(strings: Array<String>, nameString: String, color: Color = Color
     }
     Text(text = arrayMeals, modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp), color = color)
 }
+*/

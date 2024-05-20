@@ -7,6 +7,7 @@ import lab2.firstapp.model.FitnessPlan
 import lab2.firstapp.model.Gender
 import lab2.firstapp.model.models.User
 
+// here we give default values
 data class UserDetails(
     val id: Int = 0,
     val name: String = "",
@@ -19,11 +20,11 @@ data class UserDetails(
     val fitnessPlan: FitnessPlan = FitnessPlan.MAINTAIN_WEIGHT,
     val activityLevel: ActivityLevel = ActivityLevel.LIGHT_ACTIVE,
     val gender: Gender = Gender.FEMALE,
-    // ovdje treba dati neki drugi DOB
-    val dateOfBirth: String = "",
+    val dateOfBirth: String = "1999-05-15",
     // ovo je za sliku
     @DrawableRes
-    val profilePicture: Int = 0
+    val profilePicture: Int = 0,
+    val calories: Int = 2000
 )
 
 
@@ -46,7 +47,8 @@ fun UserDetails.toUser(): User = User(
     activityLevel = activityLevel,
     gender = gender,
     dateOfBirth = dateOfBirth,
-    profilePicture = profilePicture
+    profilePicture = profilePicture,
+    calories = calories
 )
 
 
@@ -63,7 +65,8 @@ fun User.toUserDetails() = UserDetails(
     activityLevel = activityLevel ?: ActivityLevel.LIGHT_ACTIVE,
     gender = gender,
     dateOfBirth = dateOfBirth ?: "",
-    profilePicture = profilePicture
+    profilePicture = profilePicture,
+    calories = calories
 )
 
 

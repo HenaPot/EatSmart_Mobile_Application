@@ -31,9 +31,9 @@ class MainActivity : ComponentActivity() {
                     //LoginScreen(this)
                     //RegistrationScreen()
                     //ProfileScreen()
-                    PreferenceScreen()
-                    //BrowseMealsScreen()
-                    //MealScreen(meal = AllMeals.meals.first())
+                    //PreferenceScreen()
+                    BrowseMealsScreen()
+                    //MealScreen()
                     //CalorieScreen()
                 }
 
