@@ -32,9 +32,9 @@ class MainActivity : ComponentActivity() {
                     //RegistrationScreen()
                     //ProfileScreen()
                     //PreferenceScreen()
-                    BrowseMealsScreen()
+                    //BrowseMealsScreen()
                     //MealScreen()
-                    //CalorieScreen()
+                    CalorieScreen()
                 }
 
             }

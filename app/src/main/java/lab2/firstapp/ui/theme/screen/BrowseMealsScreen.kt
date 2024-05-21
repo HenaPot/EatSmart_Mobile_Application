@@ -25,6 +25,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -81,44 +84,6 @@ fun BrowseMealsScreen(
     }
 }
 
-/*
-@Composable
-fun MealCard(meal: Meal){
-    Card(
-        modifier = Modifier
-            .wrapContentHeight()
-            .wrapContentWidth()
-            .padding(5.dp)
-            .width(350.dp)
-            .height(120.dp)
-            .clickable(onClick = {/*NAPRAV TAKO DA KAD KLIKNES NA KARTICU OTVORI SE TAJ RECEPT DOLE U VELIKOJ KARTICI*/ }),
-        colors = CardDefaults.cardColors(
-            containerColor = PrimaryRed
-        )
-    ) {
-        Row(
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier.padding(top = 5.dp, bottom = 5.dp, start = 5.dp, end = 10.dp)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.meal0),
-                contentDescription = meal.name,
-                modifier = Modifier
-                    .size(110.dp)
-                    .padding(top = 3.dp),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.width(20.dp))
-            Column{
-                Text(text = meal.name, fontSize = 18.sp)
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(text = "Calories: ${meal.calories}", fontSize = 16.sp)
-            }
-        }
-    }
-}*/
-
 @Composable
 fun BigMealCard(meal: Meal) {
     Card(
@@ -153,13 +118,17 @@ fun BigMealCard(meal: Meal) {
             Spacer(modifier = Modifier.height(15.dp))
             //ArrayToText(strings = meal.ingredientArray, nameString = "Ingredients")
             Text(text = "Ingredients", color = Color.White)
+            Spacer(modifier = Modifier.height(10.dp))
             Text(text = meal.ingredientArray, color = Color.White, modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp))
 
             Spacer(modifier = Modifier.height(15.dp))
             //ArrayToText(strings = meal.directionsArray, nameString = "Directions")
             Text(text = "Directions", color = Color.White)
-            Text(text = meal.directionString, color = Color.White, modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp))
-
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(text = meal.directionString.dropLast(450) + "...",
+                color = Color.White,
+                modifier = Modifier.padding(start = 20.dp, end = 20.dp, bottom = 20.dp)
+            )
             Spacer(modifier = Modifier.height(10.dp))
             Button(
                 onClick = { /*TODO*/ },

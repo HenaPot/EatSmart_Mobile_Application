@@ -17,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,17 +27,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import lab2.firstapp.R
 import lab2.firstapp.model.Meal
 import lab2.firstapp.ui.theme.PrimaryRed
 import lab2.firstapp.ui.theme.SecondaryPurple
 import lab2.firstapp.viewModel.AppViewModelProvider
 import lab2.firstapp.viewModel.MealViewModel
+import lab2.firstapp.viewModel.UserMealHistoryViewModel
 
 @Composable
 fun MealScreen(
-    viewModel: MealViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: MealViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    historyViewModel: UserMealHistoryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ){
+    val coroutineScope = rememberCoroutineScope()
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -75,7 +81,11 @@ fun MealScreen(
 
         Spacer(modifier = Modifier.height(10.dp))
         Button(
-            onClick = { /*TODO*/ },
+            onClick = {
+                      /*coroutineScope.launch {
+                          historyViewModel.updateMealHistory(8, 2, viewModel.mealUiState.mealDetails.id, "2024-05-20")
+                      }*/
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = SecondaryPurple,
                 contentColor = PrimaryRed,

@@ -52,9 +52,6 @@ data class User(
 
     @ColumnInfo(name = "profilePicture")
     @DrawableRes
-    val profilePicture: Int,
-
-    @ColumnInfo(name = "calories")
-    val calories: Int
+    val profilePicture: Int
 
 )

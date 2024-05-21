@@ -23,8 +23,7 @@ data class UserDetails(
     val dateOfBirth: String = "1999-05-15",
     // ovo je za sliku
     @DrawableRes
-    val profilePicture: Int = 0,
-    val calories: Int = 2000
+    val profilePicture: Int = 0
 )
 
 
@@ -47,8 +46,7 @@ fun UserDetails.toUser(): User = User(
     activityLevel = activityLevel,
     gender = gender,
     dateOfBirth = dateOfBirth,
-    profilePicture = profilePicture,
-    calories = calories
+    profilePicture = profilePicture
 )
 
 
@@ -65,8 +63,7 @@ fun User.toUserDetails() = UserDetails(
     activityLevel = activityLevel ?: ActivityLevel.LIGHT_ACTIVE,
     gender = gender,
     dateOfBirth = dateOfBirth ?: "",
-    profilePicture = profilePicture,
-    calories = calories
+    profilePicture = profilePicture
 )
 
 

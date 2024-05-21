@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import lab2.firstapp.model.models.Meal
 import lab2.firstapp.model.repositories.MealRepository
+import lab2.firstapp.model.repositories.UserMealHistoryRepository
 
 class MealViewModel(private val mealRepository: MealRepository): ViewModel() {
     var mealUiState by mutableStateOf(MealUiState())
@@ -23,8 +25,9 @@ class MealViewModel(private val mealRepository: MealRepository): ViewModel() {
         }
     }
 
-    /*fun updateUiState(mealDetails: MealDetails) {
+    fun updateUiState(mealDetails: MealDetails) {
         mealUiState = MealUiState(mealDetails)
-    }*/
+    }
+
 
 }

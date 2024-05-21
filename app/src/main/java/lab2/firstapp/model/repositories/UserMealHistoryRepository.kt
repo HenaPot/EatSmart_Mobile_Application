@@ -2,6 +2,7 @@ package lab2.firstapp.model.repositories
 
 import kotlinx.coroutines.flow.Flow
 import lab2.firstapp.model.dao.UserMealHistoryDao
+import lab2.firstapp.model.models.Meal
 import lab2.firstapp.model.models.UserMealHistory
 
 class UserMealHistoryRepository(private val userMealHistoryDao: UserMealHistoryDao): BaseRepository<UserMealHistory> {
@@ -14,7 +15,13 @@ class UserMealHistoryRepository(private val userMealHistoryDao: UserMealHistoryD
     override fun getOneStream(id: Int): Flow<UserMealHistory?>
         = userMealHistoryDao.getMealHistoryById(id)
 
-    fun getMealHistoryOfUser(userId: Int): Flow<List<UserMealHistory?>>
-        = userMealHistoryDao.getMealHistoryOfUser(userId)
+    fun getMealHistoryOfUser(userId: Int, date: String): Flow<List<Meal>>
+        = userMealHistoryDao.getMealHistoryOfUser(userId, date)
+
+    fun getMealHistoryByMealId(mealId: Int): Flow<UserMealHistory?>
+        = userMealHistoryDao.getMealHistoryByMealId(mealId = mealId)
+
+    fun getUsersCaloriesOnDate(userId: Int, date: String): Flow<String?>
+        = userMealHistoryDao.getUsersCaloriesOnDate(userId, date)
 
 }

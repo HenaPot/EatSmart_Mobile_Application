@@ -30,6 +30,12 @@ object AppViewModelProvider {
                 EatSmartApplication().container.mealRepository
             )
         }
+        initializer {
+            UserMealHistoryViewModel(
+                EatSmartApplication().container.userMealHistoryRepository
+            )
+        }
+
     }
 }
 
