@@ -1,6 +1,7 @@
 package lab2.firstapp.viewModel
 
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -17,7 +18,8 @@ object AppViewModelProvider {
         }
         initializer {
             UserViewModel(
-                EatSmartApplication().container.userRepository
+                EatSmartApplication().container.userRepository,
+                this.createSavedStateHandle()
             )
         }
         initializer {

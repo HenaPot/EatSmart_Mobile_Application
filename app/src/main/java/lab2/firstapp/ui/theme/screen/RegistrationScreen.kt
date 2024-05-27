@@ -1,5 +1,6 @@
 package lab2.firstapp.ui.theme.screen
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 //import androidx.compose.foundation.layout.FlowColumnScopeInstance.align
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -17,6 +19,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -46,11 +49,33 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import lab2.firstapp.R
 import lab2.firstapp.ui.theme.TertiaryColor
+import lab2.firstapp.ui.theme.screen.navigation.EatSmartAppBar
+import lab2.firstapp.ui.theme.screen.navigation.NavigationDestination
 import lab2.firstapp.viewModel.AppViewModelProvider
 import lab2.firstapp.viewModel.LoginRegistrationViewModel
 
+object RegistrationDestination: NavigationDestination {
+    override val route = "register"
+    override val title = "Register"
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun RegistrationScreenWithTopBar(
+    navigateToLogin: () -> Unit,
+    navigateToProfilePage: (Int) -> Unit
+){
+    Scaffold(
+        topBar = { EatSmartAppBar(titleScreen = RegistrationDestination.title, canNavigateBack = false)}
+    ) {
+        RegistrationScreen(navigateToLogin = navigateToLogin, navigateToProfilePage = navigateToProfilePage)
+    }
+}
+
 @Composable
 fun RegistrationScreen(
+    navigateToLogin: () -> Unit,
+    navigateToProfilePage: (Int) -> Unit,
     viewModel: LoginRegistrationViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ){
     val coroutineScope = rememberCoroutineScope()
@@ -97,9 +122,11 @@ fun RegistrationScreen(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        Image(painter = painterResource(id = R.drawable.healthy_food_icon) , contentDescription = "")
+        Spacer(modifier = Modifier.height(30.dp))
+        
+        Image(painter = painterResource(id = R.drawable.healthy_food_icon) , contentDescription = "", modifier = Modifier.size(90.dp))
 
-        Spacer(modifier = Modifier.size(width = 0.dp, height = 30.dp))
+        Spacer(modifier = Modifier.size(width = 0.dp, height = 15.dp))
 
         Text(
             text = stringResource(id = R.string.registration),
@@ -182,9 +209,9 @@ fun RegistrationScreen(
             trailingIcon = {
                 Icon(
                     painter = if(showPassword){
-                                    painterResource(id = R.drawable.icons8_show_50)
-                              } else {
                                     painterResource(id = R.drawable.icons8_hide_50)
+                              } else {
+                                    painterResource(id = R.drawable.icons8_show_50)
                               },
                     contentDescription = "",
                     modifier = Modifier.clickable(onClick = {showPassword = !showPassword})
@@ -213,9 +240,9 @@ fun RegistrationScreen(
             trailingIcon = {
                 Icon(
                     painter = if(showRepeatPassword){
-                        painterResource(id = R.drawable.icons8_show_50)
-                    } else {
                         painterResource(id = R.drawable.icons8_hide_50)
+                    } else {
+                        painterResource(id = R.drawable.icons8_show_50)
                     },
                     contentDescription = "",
                     modifier = Modifier.clickable(onClick = {showRepeatPassword = !showRepeatPassword})
@@ -227,7 +254,7 @@ fun RegistrationScreen(
             )
 
             TextButton(
-                onClick = {/*TODO*/},
+                onClick = {navigateToLogin()},
                 modifier = Modifier.align(Alignment.End)
                 ) {
                 Text(
@@ -245,6 +272,7 @@ fun RegistrationScreen(
                     coroutineScope.launch {
                         if(viewModel.register()){
                             Log.d("register", viewModel.userUiState.toString())
+                            navigateToProfilePage(viewModel.userUiState.userDetails.id)
                         }
                     }
                 }
@@ -253,10 +281,4 @@ fun RegistrationScreen(
             }
 
     }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun RegistrationPreview(){
-    RegistrationScreen()
 }

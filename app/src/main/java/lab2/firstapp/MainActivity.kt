@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import lab2.firstapp.model.AllMeals
 import lab2.firstapp.model.Meal
 import lab2.firstapp.ui.theme.FirstApplicationTheme
@@ -18,6 +19,7 @@ import lab2.firstapp.ui.theme.screen.MealScreen
 import lab2.firstapp.ui.theme.screen.PreferenceScreen
 import lab2.firstapp.ui.theme.screen.ProfileScreen
 import lab2.firstapp.ui.theme.screen.RegistrationScreen
+import lab2.firstapp.ui.theme.screen.navigation.EatSmartNavHost
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +36,8 @@ class MainActivity : ComponentActivity() {
                     //PreferenceScreen()
                     //BrowseMealsScreen()
                     //MealScreen()
-                    CalorieScreen()
+                    //CalorieScreen()
+                    EatSmartNavHost(navController = rememberNavController())
                 }
 
             }

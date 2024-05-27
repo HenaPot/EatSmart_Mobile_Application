@@ -1,5 +1,6 @@
 package lab2.firstapp.ui.theme.screen
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.util.Patterns.EMAIL_ADDRESS
@@ -17,6 +18,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -45,16 +47,43 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 import lab2.firstapp.ui.theme.SecondaryPurple
+import lab2.firstapp.ui.theme.screen.navigation.EatSmartAppBar
+import lab2.firstapp.ui.theme.screen.navigation.NavigationDestination
 import lab2.firstapp.ui.theme.sendNotification
 import lab2.firstapp.viewModel.AppViewModelProvider
 import lab2.firstapp.viewModel.LoginRegistrationViewModel
 
 
+object LoginDestination: NavigationDestination {
+    override val route = "login"
+    override val title = "Login"
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun LoginScreenWithTopBar(
+    context: Context,
+    navigateToRegister: () -> Unit,
+    navigateToProfilePage: (Int) -> Unit
+) {
+    Scaffold(
+        topBar = { EatSmartAppBar(titleScreen = LoginDestination.title, canNavigateBack = false)}
+    ) {
+        LoginScreen(
+            context = context,
+            navigateToRegister = navigateToRegister,
+            navigateToProfilePage = navigateToProfilePage
+        )
+    }
+}
+
 //@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     context: Context,
-    viewModel: LoginRegistrationViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: LoginRegistrationViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToRegister: () -> Unit,
+    navigateToProfilePage: (Int) -> Unit
     ) {
 
     val coroutineScope = rememberCoroutineScope()
@@ -147,9 +176,9 @@ fun LoginScreen(
             trailingIcon = {
                 Icon(
                     painter = if(showPassword) {
-                        painterResource(id = R.drawable.icons8_hide_50)
-                    } else {
                         painterResource(id = R.drawable.icons8_show_50)
+                    } else {
+                        painterResource(id = R.drawable.icons8_hide_50)
                     },
                     contentDescription = "",
                     modifier = Modifier.clickable(onClick = {showPassword = !showPassword})
@@ -164,10 +193,11 @@ fun LoginScreen(
 
         TextButton(
             onClick = {
-                      sendNotification(title = "It sucks to be you lmao",
+                      /*sendNotification(title = "It sucks to be you lmao",
                           notificationBodyText = "Notification body test",
                           count = 1,
-                          context = context)
+                          context = context)*/
+                      navigateToRegister()
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
@@ -188,6 +218,7 @@ fun LoginScreen(
                 // pre login shows in logcat and logs user's input
                 if(viewModel.login()){
                     Log.d("login", viewModel.userUiState.toString())
+                    navigateToProfilePage(viewModel.userUiState.userDetails.id)
                 }
             }
         }) {

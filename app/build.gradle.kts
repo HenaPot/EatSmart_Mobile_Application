@@ -65,6 +65,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    //NAVIGATION
+    implementation("androidx.navigation:navigation-compose:2.6.0")
+
     //ROOM
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")

@@ -36,6 +36,7 @@ class LoginRegistrationViewModel(private val userRepository: UserRepository): Vi
     suspend fun register(): Boolean{
         if(validateInput()){
             userRepository.insert(userUiState.userDetails.toUser())
+            login()
             return true
         }else return false
     }

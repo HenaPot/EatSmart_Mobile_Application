@@ -1,5 +1,6 @@
 package lab2.firstapp.ui.theme.screen
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Icon
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldColors
@@ -46,8 +48,29 @@ import lab2.firstapp.model.ActivityLevel
 import lab2.firstapp.model.DietaryPlan
 import lab2.firstapp.model.FitnessPlan
 import lab2.firstapp.ui.theme.PrimaryRed
+import lab2.firstapp.ui.theme.screen.navigation.EatSmartAppBar
+import lab2.firstapp.ui.theme.screen.navigation.NavigationDestination
 import lab2.firstapp.viewModel.AppViewModelProvider
 import lab2.firstapp.viewModel.UserViewModel
+
+object PreferencesDestination: NavigationDestination{
+    override val route: String = "Preferences"
+    override val title: String = "Preferences"
+    const val userIdArg: String = "userID"
+    val routeWithArgs = "$route/{$userIdArg}"
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun PreferenceScreenWithTopBar(
+    navigateBack: () -> Unit
+){
+    Scaffold(
+        topBar = { EatSmartAppBar(titleScreen = PreferencesDestination.title, canNavigateBack = true, navigateBack = navigateBack)}
+    ) {
+        PreferenceScreen()
+    }
+}
 
 @Composable
 fun PreferenceScreen(

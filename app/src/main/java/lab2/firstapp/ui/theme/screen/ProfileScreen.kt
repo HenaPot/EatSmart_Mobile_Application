@@ -1,5 +1,6 @@
 package lab2.firstapp.ui.theme.screen
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -31,6 +33,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -39,6 +42,8 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -65,16 +70,38 @@ import kotlinx.coroutines.launch
 import lab2.firstapp.R
 import lab2.firstapp.model.Gender
 import lab2.firstapp.ui.theme.PrimaryRed
+import lab2.firstapp.ui.theme.screen.navigation.EatSmartAppBar
+import lab2.firstapp.ui.theme.screen.navigation.NavigationDestination
 import lab2.firstapp.viewModel.AppViewModelProvider
 import lab2.firstapp.viewModel.UserViewModel
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 
+object ProfileDestination: NavigationDestination {
+    override val route = "profile"
+    override val title = "Profile"
+    const val userIdArg = "userID"
+    val routeWithArgs = "$route/{$userIdArg}"
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun ProfileScreenWithTopBar(
+    navigateBack: () -> Unit,
+    navigateToPreferences: (Int) -> Unit
+) {
+    Scaffold(
+        topBar = { EatSmartAppBar(titleScreen = ProfileDestination.title, canNavigateBack = true, navigateBack = navigateBack)}
+    ) {
+        ProfileScreen(navigateToPreferences = navigateToPreferences)
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    viewModel: UserViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: UserViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToPreferences: (Int) -> Unit
 ){
     var uiState = viewModel.userUiState
     var detailsState = uiState.userDetails
@@ -115,6 +142,7 @@ fun ProfileScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Spacer(modifier = Modifier.height(50.dp))
 
         ProfileImage()
 
@@ -263,10 +291,33 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))
 
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            //horizontalArrangement = Arrangement.Start,
+            modifier = Modifier
+                .width(280.dp)
+                .height(40.dp)
+                .clickable {
+                    navigateToPreferences(viewModel.userUiState.userDetails.id)
+                }
+
+        ) {
+
+            Icon(imageVector = Icons.Default.Settings, contentDescription = null, tint = PrimaryRed)
+            Spacer(modifier = Modifier.width(20.dp))
+            Text(
+                text = "Change Preferences",
+                color = PrimaryRed,
+                fontSize = 16.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.size(height = 50.dp, width = 0.dp))
+
         Text(
             text = "Contact Us",
             color = PrimaryRed,
-            fontSize = 16.sp
+            fontSize = 18.sp
         )
 
         Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))
@@ -290,7 +341,7 @@ fun ProfileScreen(
                 }
                 .align(Alignment.Start)
         ) {
-            Icon(Icons.Default.Email, contentDescription = null, modifier = Modifier.size(40.dp), tint = PrimaryRed)
+            Icon(imageVector = Icons.Default.Email, contentDescription = null, modifier = Modifier.size(50.dp), tint = PrimaryRed)
             Spacer(modifier = Modifier.size(width = 20.dp, height = 0.dp))
             Text(text = creatorEmail, color = PrimaryRed)
         }
@@ -391,15 +442,4 @@ fun ProfileImage() {
     }
 }
 
-@Composable
-@Preview(showBackground = true)
-fun ProfileScreenPreview() {
-    ProfileScreen()
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ProfileImagePreview(){
-    ProfileImage()
-}
 
