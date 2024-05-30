@@ -416,6 +416,7 @@ fun ProfileImage() {
         }
     }
 
+    // BITMAP SE PRETVORI U STRING PA ONDA U BAZU DA SE SPREMI
     if(bitmap.value != null) {
         bitmap.value?.let{
             btm ->

@@ -269,13 +269,9 @@ fun MealCard(meal: Meal, viewModel: UserMealHistoryViewModel){
                     Button(
                         onClick = {
                              //THESE ARE NOT NECESSARY AS
-                            val updatedMealList = viewModel.userMealHistoryUiState.value.mealHistoryList.toMutableList().apply {
-                                remove(meal)
-                            }
-                            viewModel.updateUiState(updatedMealList)
 
                             coroutineScope.launch {
-                                viewModel.deleteMealHistory(meal)
+                                viewModel.deleteMealHistory(meal.id)
 
                             }
                         },

@@ -30,14 +30,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = SecondaryPurple
                 ) {
-                    //LoginScreen(this)
+                   // LoginScreen(this, navigateToRegister= {}, navigateToProfilePage={})
                     //RegistrationScreen()
                     //ProfileScreen()
                     //PreferenceScreen()
                     //BrowseMealsScreen()
                     //MealScreen()
-                    //CalorieScreen()
-                    EatSmartNavHost(navController = rememberNavController())
+                    CalorieScreen()
+                    //EatSmartNavHost(navController = rememberNavController())
                 }
 
             }

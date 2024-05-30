@@ -46,6 +46,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
+import lab2.firstapp.ui.theme.PrimaryRed
 import lab2.firstapp.ui.theme.SecondaryPurple
 import lab2.firstapp.ui.theme.screen.navigation.EatSmartAppBar
 import lab2.firstapp.ui.theme.screen.navigation.NavigationDestination
@@ -65,8 +66,10 @@ fun LoginScreenWithTopBar(
     context: Context,
     navigateToRegister: () -> Unit,
     navigateToProfilePage: (Int) -> Unit
-) {
+) {FirstApplicationTheme{
     Scaffold(
+        // OVO OVDJE JE BOJA EKRANA
+        //containerColor = PrimaryRed,
         topBar = { EatSmartAppBar(titleScreen = LoginDestination.title, canNavigateBack = false)}
     ) {
         LoginScreen(
@@ -74,6 +77,7 @@ fun LoginScreenWithTopBar(
             navigateToRegister = navigateToRegister,
             navigateToProfilePage = navigateToProfilePage
         )
+    }
     }
 }
 

@@ -39,8 +39,8 @@ class UserMealHistoryViewModel(private val userMealHistoryRepository: UserMealHi
         _userMealHistoryUiState.value = MealHistoryUiState(mealHistoryList)
     }
 
-    suspend fun deleteMealHistory(meal: Meal) {
-        val userMealHistoryFlow = userMealHistoryRepository.getMealHistoryByMealId(meal.id)
+    suspend fun deleteMealHistory(mealId: Int) {
+        val userMealHistoryFlow = userMealHistoryRepository.getMealHistoryByMealId(mealId)
         val userMealHistory = userMealHistoryFlow.firstOrNull()
 
         userMealHistory?.let {
