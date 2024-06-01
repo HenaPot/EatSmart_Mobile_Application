@@ -14,9 +14,10 @@ import lab2.firstapp.ui.theme.screen.PreferencesDestination
 import lab2.firstapp.ui.theme.screen.ProfileDestination
 
 class UserViewModel(private val userRepository: UserRepository, savedStateHandle: SavedStateHandle): ViewModel() {
-    private val userId: Int =
-        checkNotNull(savedStateHandle[ProfileDestination.userIdArg])
+    /*private val userId: Int =
+        checkNotNull(savedStateHandle[ProfileDestination.userIdArg])*/
 
+    val userId: Int = savedStateHandle[ProfileDestination.userIdArg] ?: 0
 
     var userUiState by mutableStateOf(UserUiState())
         private set

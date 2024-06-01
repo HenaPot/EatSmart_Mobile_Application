@@ -36,8 +36,8 @@ class MainActivity : ComponentActivity() {
                     //PreferenceScreen()
                     //BrowseMealsScreen()
                     //MealScreen()
-                    CalorieScreen()
-                    //EatSmartNavHost(navController = rememberNavController())
+                    //CalorieScreen()
+                    EatSmartNavHost(navController = rememberNavController())
                 }
 
             }

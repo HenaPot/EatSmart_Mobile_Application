@@ -1,18 +1,15 @@
 package lab2.firstapp.ui.theme.screen
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,13 +18,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,16 +34,42 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import lab2.firstapp.R
-import lab2.firstapp.model.AllMeals
 import lab2.firstapp.model.models.Meal
 import lab2.firstapp.ui.theme.PrimaryRed
 import lab2.firstapp.ui.theme.SecondaryPurple
+import lab2.firstapp.ui.theme.screen.navigation.EatSmartAppBar
+import lab2.firstapp.ui.theme.screen.navigation.EatSmartBottomBar
+import lab2.firstapp.ui.theme.screen.navigation.NavigationDestination
 import lab2.firstapp.viewModel.AllMealsViewModel
 import lab2.firstapp.viewModel.AppViewModelProvider
 
+object BrowseMealsDestination: NavigationDestination {
+    override val route = "Browse Meals"
+    override val title = "Browse Meals"
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun BrowseMealsScreenWithAppBar(
+    navigateToMealScreen: (Int) -> Unit,
+    navigateBack: () -> Unit,
+    navigateToBrowseMealScreen: () -> Unit,
+    navigateToCaloriesScreen: (Int) -> Unit,
+    navigateToProfileScreen: (Int) -> Unit,
+    logOut: () -> Unit
+){
+    Scaffold(
+        topBar = { EatSmartAppBar(titleScreen = BrowseMealsDestination.title, canNavigateBack = true, navigateBack = navigateBack, logOut = logOut) },
+        bottomBar = { EatSmartBottomBar(navigateToBrowseMealScreen = navigateToBrowseMealScreen, navigateToCaloriesScreen = navigateToCaloriesScreen, navigateToProfileScreen = navigateToProfileScreen)}
+    ) {
+        BrowseMealsScreen(navigateToMealScreen = navigateToMealScreen)
+    }
+}
+
 @Composable
 fun BrowseMealsScreen(
-    viewModel: AllMealsViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    viewModel: AllMealsViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    navigateToMealScreen: (Int) -> Unit,
 ){
     val allMealsUiState by viewModel.allMealsUiState.collectAsState()
     Log.d("all meals", allMealsUiState.mealList.toString())
@@ -78,14 +99,16 @@ fun BrowseMealsScreen(
 
         LazyColumn() {
             items(allMealsUiState.mealList) { meal ->
-                BigMealCard(meal = meal)
+                BigMealCard(meal = meal, navigateToMealScreen = navigateToMealScreen)
             }
         }
+        // fix the fact that you cant see button of last card
+        Spacer(modifier = Modifier.height(60.dp))
     }
 }
 
 @Composable
-fun BigMealCard(meal: Meal) {
+fun BigMealCard(meal: Meal, navigateToMealScreen: (Int) -> Unit) {
     Card(
         modifier = Modifier
             .wrapContentHeight()
@@ -131,7 +154,7 @@ fun BigMealCard(meal: Meal) {
             )
             Spacer(modifier = Modifier.height(10.dp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navigateToMealScreen(meal.id) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = SecondaryPurple,
                     contentColor = PrimaryRed

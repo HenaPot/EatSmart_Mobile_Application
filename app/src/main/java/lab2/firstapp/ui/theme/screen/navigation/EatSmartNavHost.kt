@@ -6,17 +6,20 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import lab2.firstapp.ui.theme.screen.BrowseMealsDestination
+import lab2.firstapp.ui.theme.screen.BrowseMealsScreenWithAppBar
+import lab2.firstapp.ui.theme.screen.CalorieScreen
+import lab2.firstapp.ui.theme.screen.CalorieScreenWithAppBar
+import lab2.firstapp.ui.theme.screen.CaloriesDestination
 import lab2.firstapp.ui.theme.screen.LoginDestination
-import lab2.firstapp.ui.theme.screen.LoginScreen
 import lab2.firstapp.ui.theme.screen.LoginScreenWithTopBar
-import lab2.firstapp.ui.theme.screen.PreferenceScreen
+import lab2.firstapp.ui.theme.screen.MealDestination
+import lab2.firstapp.ui.theme.screen.MealScreenWithAppBar
 import lab2.firstapp.ui.theme.screen.PreferenceScreenWithTopBar
 import lab2.firstapp.ui.theme.screen.PreferencesDestination
 import lab2.firstapp.ui.theme.screen.ProfileDestination
-import lab2.firstapp.ui.theme.screen.ProfileScreen
 import lab2.firstapp.ui.theme.screen.ProfileScreenWithTopBar
 import lab2.firstapp.ui.theme.screen.RegistrationDestination
-import lab2.firstapp.ui.theme.screen.RegistrationScreen
 import lab2.firstapp.ui.theme.screen.RegistrationScreenWithTopBar
 
 @Composable
@@ -44,7 +47,10 @@ fun EatSmartNavHost(
         ) {
             ProfileScreenWithTopBar(
                 navigateBack = { navController.navigateUp() },
-                navigateToPreferences = {navController.navigate("${PreferencesDestination.route}/${it}")}
+                navigateToPreferences = {navController.navigate("${PreferencesDestination.route}/${it}")},
+                navigateToBrowseMealScreen = {navController.navigate(BrowseMealsDestination.route)},
+                navigateToCaloriesScreen = {navController.navigate("${CaloriesDestination.route}/${it}")},
+                logOut = {navController.navigate(LoginDestination.route)}
                 )
         }
         composable(
@@ -53,10 +59,61 @@ fun EatSmartNavHost(
                 type = NavType.IntType })
         ){
             PreferenceScreenWithTopBar(
-                navigateBack = {navController.navigateUp()}
+                navigateBack = {navController.navigateUp()},
+                navigateToBrowseMealScreen = {navController.navigate(BrowseMealsDestination.route)},
+                navigateToCaloriesScreen = {navController.navigate("${CaloriesDestination.route}/${it}")},
+                navigateToProfileScreen = { navController.navigate("${ProfileDestination.route}/${it}") },
+                logOut = {navController.navigate(LoginDestination.route)}
             )
         }
 
+        composable(
+            route = BrowseMealsDestination.route
+        ){
+            BrowseMealsScreenWithAppBar(
+                navigateBack = { navController.navigateUp() },
+                navigateToBrowseMealScreen = {},
+                navigateToMealScreen = {navController.navigate("${MealDestination.route}/${it}")},
+                navigateToCaloriesScreen = {navController.navigate("${CaloriesDestination.route}/${it}")},
+                navigateToProfileScreen = { navController.navigate("${ProfileDestination.route}/${it}") },
+                logOut = {navController.navigate(LoginDestination.route)}
+            )
+        }
+
+        composable(
+            route = MealDestination.routeWithArgs,
+            arguments = listOf(
+                navArgument(MealDestination.mealId){
+                    type = NavType.IntType
+                }
+            )
+        ){
+            MealScreenWithAppBar(
+                navigateToBrowseMealScreen = { navController.navigate(BrowseMealsDestination.route) },
+                navigateBack = { navController.navigateUp() },
+                navigateToCaloriesScreen = {navController.navigate("${CaloriesDestination.route}/${it}")},
+                navigateToProfileScreen = { navController.navigate("${ProfileDestination.route}/${it}") },
+                logOut = {navController.navigate(LoginDestination.route)}
+                )
+
+        }
+
+        composable(
+            route = CaloriesDestination.routeWithArgs,
+            arguments = listOf(
+                navArgument(CaloriesDestination.userIdArg){
+                    type = NavType.IntType
+                }
+            )
+        ){
+            CalorieScreenWithAppBar(
+                navigateToBrowseMealScreen = { navController.navigate(BrowseMealsDestination.route) },
+                navigateBack = { navController.navigateUp() },
+                navigateToProfileScreen = { navController.navigate("${ProfileDestination.route}/${it}") },
+                logOut = {navController.navigate(LoginDestination.route)}
+            )
+
+        }
 
     }
 }

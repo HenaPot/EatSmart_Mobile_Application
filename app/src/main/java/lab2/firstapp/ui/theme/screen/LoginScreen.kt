@@ -70,7 +70,7 @@ fun LoginScreenWithTopBar(
     Scaffold(
         // OVO OVDJE JE BOJA EKRANA
         //containerColor = PrimaryRed,
-        topBar = { EatSmartAppBar(titleScreen = LoginDestination.title, canNavigateBack = false)}
+        topBar = { EatSmartAppBar(titleScreen = LoginDestination.title, canNavigateBack = false, logOut = {})}
     ) {
         LoginScreen(
             context = context,

@@ -49,6 +49,7 @@ import lab2.firstapp.model.DietaryPlan
 import lab2.firstapp.model.FitnessPlan
 import lab2.firstapp.ui.theme.PrimaryRed
 import lab2.firstapp.ui.theme.screen.navigation.EatSmartAppBar
+import lab2.firstapp.ui.theme.screen.navigation.EatSmartBottomBar
 import lab2.firstapp.ui.theme.screen.navigation.NavigationDestination
 import lab2.firstapp.viewModel.AppViewModelProvider
 import lab2.firstapp.viewModel.UserViewModel
@@ -63,10 +64,19 @@ object PreferencesDestination: NavigationDestination{
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun PreferenceScreenWithTopBar(
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    navigateToBrowseMealScreen: () -> Unit,
+    navigateToCaloriesScreen: (Int) -> Unit,
+    navigateToProfileScreen: (Int) -> Unit,
+    logOut: () -> Unit
 ){
     Scaffold(
-        topBar = { EatSmartAppBar(titleScreen = PreferencesDestination.title, canNavigateBack = true, navigateBack = navigateBack)}
+        topBar = { EatSmartAppBar(titleScreen = PreferencesDestination.title, canNavigateBack = true, navigateBack = navigateBack, logOut = logOut)},
+        bottomBar = { EatSmartBottomBar(
+            navigateToBrowseMealScreen = navigateToBrowseMealScreen,
+            navigateToCaloriesScreen = navigateToCaloriesScreen,
+            navigateToProfileScreen = navigateToProfileScreen
+        )}
     ) {
         PreferenceScreen()
     }

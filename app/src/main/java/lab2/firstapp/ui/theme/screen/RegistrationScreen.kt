@@ -66,7 +66,7 @@ fun RegistrationScreenWithTopBar(
     navigateToProfilePage: (Int) -> Unit
 ){
     Scaffold(
-        topBar = { EatSmartAppBar(titleScreen = RegistrationDestination.title, canNavigateBack = false)}
+        topBar = { EatSmartAppBar(titleScreen = RegistrationDestination.title, canNavigateBack = false, logOut = {})}
     ) {
         RegistrationScreen(navigateToLogin = navigateToLogin, navigateToProfilePage = navigateToProfilePage)
     }

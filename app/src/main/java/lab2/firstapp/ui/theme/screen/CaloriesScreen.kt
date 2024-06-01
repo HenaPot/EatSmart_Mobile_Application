@@ -1,5 +1,6 @@
 package lab2.firstapp.ui.theme.screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -61,24 +63,53 @@ import lab2.firstapp.R
 import lab2.firstapp.model.models.Meal
 import lab2.firstapp.ui.theme.PrimaryRed
 import lab2.firstapp.ui.theme.SecondaryPurple
+import lab2.firstapp.ui.theme.screen.navigation.EatSmartAppBar
+import lab2.firstapp.ui.theme.screen.navigation.EatSmartBottomBar
+import lab2.firstapp.ui.theme.screen.navigation.NavigationDestination
 import lab2.firstapp.viewModel.AppViewModelProvider
 import lab2.firstapp.viewModel.UserMealHistoryViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
+object CaloriesDestination: NavigationDestination {
+    override val route = "calories"
+    override val title = "Calories"
+    const val userIdArg = "userID"
+    val routeWithArgs = "$route/{$userIdArg}"
+}
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun CalorieScreenWithAppBar(
+    navigateToBrowseMealScreen: () -> Unit,
+    navigateBack: () -> Unit,
+    navigateToCaloriesScreen: (Int) -> Unit = {},
+    navigateToProfileScreen: (Int) -> Unit,
+    logOut: () -> Unit
+) {
+    Scaffold(
+        topBar = { EatSmartAppBar(titleScreen = CaloriesDestination.title, canNavigateBack = true, navigateBack = navigateBack, logOut = logOut)},
+        bottomBar = { EatSmartBottomBar(navigateToBrowseMealScreen = navigateToBrowseMealScreen, navigateToCaloriesScreen = navigateToCaloriesScreen, navigateToProfileScreen = navigateToProfileScreen) }
+    ) {
+
+        CalorieScreen(navigateToBrowseMealScreen = navigateToBrowseMealScreen)
+    }
+}
+
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun CalorieScreen(
     //when you want to change user you must also change userId in the viewModel, it is hardcoded
-    userId: Int = 2,
+    navigateToBrowseMealScreen: () -> Unit,
     date: String = getTodayDateString(),
     viewModel: UserMealHistoryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ){
     val mealHistoryUiState by viewModel.userMealHistoryUiState.collectAsState()
     val totalCalories = viewModel.totalCalories.collectAsState()
 
-    LaunchedEffect(userId, date) {
-        viewModel.getUsersCaloriesOnDate(userId, date)
+    LaunchedEffect(viewModel.userId, date) {
+        viewModel.getUsersCaloriesOnDate(viewModel.userId, date)
+        viewModel.getUsersCaloriesOnDate(viewModel.userId, date)
     }
 
     var expandedAddMeal by remember {
@@ -102,6 +133,8 @@ fun CalorieScreen(
             .wrapContentWidth()
             .fillMaxSize()
     ) {
+
+        Spacer(modifier = Modifier.height(40.dp))
 
         Text(
             text = "Stay on track!",
@@ -159,7 +192,9 @@ fun CalorieScreen(
             {
                 DropdownMenuItem(
                     text = { Text(text = "Add meal")},
-                    onClick = {/*NAVIGATE TO MEALS SCREEN*/}
+                    onClick = {/*NAVIGATE TO MEALS SCREEN*/
+                        navigateToBrowseMealScreen()
+                    }
                 )
 
                 /*DropdownMenuItem(
@@ -190,8 +225,8 @@ fun CalorieScreen(
 
                             //viewModel
                             coroutineScope.launch {
-                                viewModel.getUserHistory(userId, mutableDate)
-                                viewModel.getUsersCaloriesOnDate(userId, mutableDate)
+                                viewModel.getUserHistory(viewModel.userId, mutableDate)
+                                viewModel.getUsersCaloriesOnDate(viewModel.userId, mutableDate)
                             }
 
                         }
@@ -221,6 +256,8 @@ fun CalorieScreen(
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(60.dp))
     }
 }
 

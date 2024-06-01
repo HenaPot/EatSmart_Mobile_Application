@@ -71,6 +71,7 @@ import lab2.firstapp.R
 import lab2.firstapp.model.Gender
 import lab2.firstapp.ui.theme.PrimaryRed
 import lab2.firstapp.ui.theme.screen.navigation.EatSmartAppBar
+import lab2.firstapp.ui.theme.screen.navigation.EatSmartBottomBar
 import lab2.firstapp.ui.theme.screen.navigation.NavigationDestination
 import lab2.firstapp.viewModel.AppViewModelProvider
 import lab2.firstapp.viewModel.UserViewModel
@@ -88,10 +89,15 @@ object ProfileDestination: NavigationDestination {
 @Composable
 fun ProfileScreenWithTopBar(
     navigateBack: () -> Unit,
-    navigateToPreferences: (Int) -> Unit
+    navigateToPreferences: (Int) -> Unit,
+    navigateToBrowseMealScreen: () -> Unit,
+    navigateToCaloriesScreen: (Int) -> Unit,
+    navigateToProfileScreen: (Int) -> Unit = {},
+    logOut: () -> Unit
 ) {
     Scaffold(
-        topBar = { EatSmartAppBar(titleScreen = ProfileDestination.title, canNavigateBack = true, navigateBack = navigateBack)}
+        topBar = { EatSmartAppBar(titleScreen = ProfileDestination.title, canNavigateBack = true, navigateBack = navigateBack, logOut = logOut)},
+        bottomBar = { EatSmartBottomBar(navigateToBrowseMealScreen = navigateToBrowseMealScreen, navigateToCaloriesScreen = navigateToCaloriesScreen, navigateToProfileScreen = navigateToProfileScreen)}
     ) {
         ProfileScreen(navigateToPreferences = navigateToPreferences)
     }
@@ -142,7 +148,7 @@ fun ProfileScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(50.dp))
+        Spacer(modifier = Modifier.height(15.dp))
 
         ProfileImage()
 
@@ -289,7 +295,7 @@ fun ProfileScreen(
             }
         }
 
-        Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))
+        Spacer(modifier = Modifier.size(height = 15.dp, width = 0.dp))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -303,16 +309,16 @@ fun ProfileScreen(
 
         ) {
 
-            Icon(imageVector = Icons.Default.Settings, contentDescription = null, tint = PrimaryRed)
+            Icon(imageVector = Icons.Default.Settings, contentDescription = null, /*tint = PrimaryRed*/)
             Spacer(modifier = Modifier.width(20.dp))
             Text(
                 text = "Change Preferences",
-                color = PrimaryRed,
+                //color = PrimaryRed,
                 fontSize = 16.sp
             )
         }
 
-        Spacer(modifier = Modifier.size(height = 50.dp, width = 0.dp))
+        Spacer(modifier = Modifier.size(height = 20.dp, width = 0.dp))
 
         Text(
             text = "Contact Us",
@@ -320,7 +326,7 @@ fun ProfileScreen(
             fontSize = 18.sp
         )
 
-        Spacer(modifier = Modifier.size(height = 30.dp, width = 0.dp))
+        Spacer(modifier = Modifier.size(height = 15.dp, width = 0.dp))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,

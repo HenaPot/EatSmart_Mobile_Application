@@ -24,7 +24,8 @@ object AppViewModelProvider {
         }
         initializer {
             MealViewModel(
-                EatSmartApplication().container.mealRepository
+                EatSmartApplication().container.mealRepository,
+                this.createSavedStateHandle()
             )
         }
         initializer {
@@ -34,7 +35,8 @@ object AppViewModelProvider {
         }
         initializer {
             UserMealHistoryViewModel(
-                EatSmartApplication().container.userMealHistoryRepository
+                EatSmartApplication().container.userMealHistoryRepository,
+                this.createSavedStateHandle()
             )
         }
 

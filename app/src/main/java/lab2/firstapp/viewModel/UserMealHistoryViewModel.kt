@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.Flow
@@ -18,9 +19,12 @@ import kotlinx.coroutines.launch
 import lab2.firstapp.model.models.Meal
 import lab2.firstapp.model.models.UserMealHistory
 import lab2.firstapp.model.repositories.UserMealHistoryRepository
+import lab2.firstapp.ui.theme.screen.ProfileDestination
 import lab2.firstapp.ui.theme.screen.getTodayDateString
 
-class UserMealHistoryViewModel(private val userMealHistoryRepository: UserMealHistoryRepository): ViewModel() {
+class UserMealHistoryViewModel(private val userMealHistoryRepository: UserMealHistoryRepository, savedStateHandle: SavedStateHandle): ViewModel() {
+    val userId: Int =
+        savedStateHandle[ProfileDestination.userIdArg] ?: 0
 
     private val _userMealHistoryUiState = MutableStateFlow(MealHistoryUiState())
     val userMealHistoryUiState: StateFlow<MealHistoryUiState> = _userMealHistoryUiState
@@ -30,8 +34,8 @@ class UserMealHistoryViewModel(private val userMealHistoryRepository: UserMealHi
 
     init {
         viewModelScope.launch {
-            // THIS WILL HAVE TO BE EDITED AS VALUES ARE HARDCODED BELOW
-            getUserHistory(2, getTodayDateString())
+            getUserHistory(userId, getTodayDateString())
+            getUsersCaloriesOnDate(userId, getTodayDateString())
         }
     }
 
