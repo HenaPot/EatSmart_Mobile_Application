@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 import lab2.firstapp.R
 import lab2.firstapp.ui.theme.PrimaryRed
 import lab2.firstapp.ui.theme.SecondaryPurple
@@ -42,14 +43,15 @@ object MealDestination: NavigationDestination {
     override val route = "meal"
     override val title = "Meal"
     const val mealId = "mealId"
-    val routeWithArgs = "$route/{$mealId}"
+    const val userId = "userId"
+    val routeWithArgs = "$route/{$mealId}/{$userId}"
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MealScreenWithAppBar(
     navigateBack : () -> Unit,
-    navigateToBrowseMealScreen: () -> Unit,
+    navigateToBrowseMealScreen: (Int) -> Unit,
     navigateToCaloriesScreen: (Int) -> Unit,
     navigateToProfileScreen: (Int) -> Unit,
     logOut: () -> Unit
@@ -109,11 +111,16 @@ fun MealScreen(
         Spacer(modifier = Modifier.height(10.dp))
         Button(
             onClick = {
-                  //SEND CALORIES TO THE CALORIE SCREEN AS WELL
-                  navigateToCalorieScreen(historyViewModel.userId)
-                  /*coroutineScope.launch {
-                      historyViewModel.updateMealHistory(8, 2, viewModel.mealUiState.mealDetails.id, "2024-05-20")
-                  }*/
+                //SEND CALORIES TO THE CALORIE SCREEN AS WELL
+                //viewModel.mealUiState.mealDetails.calories
+                coroutineScope.launch {
+                    historyViewModel.addMealToHistory(historyViewModel.userId, viewModel.mealUiState.mealDetails.id, getTodayDateString())
+                }
+
+                navigateToCalorieScreen(historyViewModel.userId)
+                /*coroutineScope.launch {
+                    historyViewModel.updateMealHistory(8, 2, viewModel.mealUiState.mealDetails.id, "2024-05-20")
+                }*/
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = SecondaryPurple,

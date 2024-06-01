@@ -17,7 +17,8 @@ class UserViewModel(private val userRepository: UserRepository, savedStateHandle
     /*private val userId: Int =
         checkNotNull(savedStateHandle[ProfileDestination.userIdArg])*/
 
-    val userId: Int = savedStateHandle[ProfileDestination.userIdArg] ?: 0
+    var userId: Int = savedStateHandle[ProfileDestination.userIdArg]!!
+
 
     var userUiState by mutableStateOf(UserUiState())
         private set

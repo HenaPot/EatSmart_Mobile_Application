@@ -8,7 +8,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import lab2.firstapp.ui.theme.screen.BrowseMealsDestination
 import lab2.firstapp.ui.theme.screen.BrowseMealsScreenWithAppBar
-import lab2.firstapp.ui.theme.screen.CalorieScreen
 import lab2.firstapp.ui.theme.screen.CalorieScreenWithAppBar
 import lab2.firstapp.ui.theme.screen.CaloriesDestination
 import lab2.firstapp.ui.theme.screen.LoginDestination
@@ -48,7 +47,7 @@ fun EatSmartNavHost(
             ProfileScreenWithTopBar(
                 navigateBack = { navController.navigateUp() },
                 navigateToPreferences = {navController.navigate("${PreferencesDestination.route}/${it}")},
-                navigateToBrowseMealScreen = {navController.navigate(BrowseMealsDestination.route)},
+                navigateToBrowseMealScreen = {navController.navigate("${BrowseMealsDestination.route}/${it}")},
                 navigateToCaloriesScreen = {navController.navigate("${CaloriesDestination.route}/${it}")},
                 logOut = {navController.navigate(LoginDestination.route)}
                 )
@@ -60,7 +59,7 @@ fun EatSmartNavHost(
         ){
             PreferenceScreenWithTopBar(
                 navigateBack = {navController.navigateUp()},
-                navigateToBrowseMealScreen = {navController.navigate(BrowseMealsDestination.route)},
+                navigateToBrowseMealScreen = {navController.navigate("${BrowseMealsDestination.route}/${it}")},
                 navigateToCaloriesScreen = {navController.navigate("${CaloriesDestination.route}/${it}")},
                 navigateToProfileScreen = { navController.navigate("${ProfileDestination.route}/${it}") },
                 logOut = {navController.navigate(LoginDestination.route)}
@@ -68,16 +67,19 @@ fun EatSmartNavHost(
         }
 
         composable(
-            route = BrowseMealsDestination.route
+            route = BrowseMealsDestination.routeWithArgs,
+            arguments = listOf(navArgument(BrowseMealsDestination.userIdArg) {
+                type = NavType.IntType
+            })
         ){
             BrowseMealsScreenWithAppBar(
                 navigateBack = { navController.navigateUp() },
                 navigateToBrowseMealScreen = {},
-                navigateToMealScreen = {navController.navigate("${MealDestination.route}/${it}")},
+                //ovaj se treba popraviti
+                navigateToMealScreen = { mealId: Int, userId: Int -> navController.navigate("${MealDestination.route}/${mealId}/${userId}")},
                 navigateToCaloriesScreen = {navController.navigate("${CaloriesDestination.route}/${it}")},
-                navigateToProfileScreen = { navController.navigate("${ProfileDestination.route}/${it}") },
-                logOut = {navController.navigate(LoginDestination.route)}
-            )
+                navigateToProfileScreen = { navController.navigate("${ProfileDestination.route}/${it}") }
+            ) { navController.navigate(LoginDestination.route) }
         }
 
         composable(
@@ -85,11 +87,14 @@ fun EatSmartNavHost(
             arguments = listOf(
                 navArgument(MealDestination.mealId){
                     type = NavType.IntType
+                },
+                navArgument(MealDestination.userId) {
+                    type = NavType.IntType
                 }
             )
         ){
             MealScreenWithAppBar(
-                navigateToBrowseMealScreen = { navController.navigate(BrowseMealsDestination.route) },
+                navigateToBrowseMealScreen = { navController.navigate("${BrowseMealsDestination.route}/${it}") },
                 navigateBack = { navController.navigateUp() },
                 navigateToCaloriesScreen = {navController.navigate("${CaloriesDestination.route}/${it}")},
                 navigateToProfileScreen = { navController.navigate("${ProfileDestination.route}/${it}") },
@@ -107,7 +112,7 @@ fun EatSmartNavHost(
             )
         ){
             CalorieScreenWithAppBar(
-                navigateToBrowseMealScreen = { navController.navigate(BrowseMealsDestination.route) },
+                navigateToBrowseMealScreen = { navController.navigate("${BrowseMealsDestination.route}/${it}") },
                 navigateBack = { navController.navigateUp() },
                 navigateToProfileScreen = { navController.navigate("${ProfileDestination.route}/${it}") },
                 logOut = {navController.navigate(LoginDestination.route)}

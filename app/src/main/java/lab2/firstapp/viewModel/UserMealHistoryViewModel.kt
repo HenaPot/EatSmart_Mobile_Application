@@ -23,8 +23,8 @@ import lab2.firstapp.ui.theme.screen.ProfileDestination
 import lab2.firstapp.ui.theme.screen.getTodayDateString
 
 class UserMealHistoryViewModel(private val userMealHistoryRepository: UserMealHistoryRepository, savedStateHandle: SavedStateHandle): ViewModel() {
-    val userId: Int =
-        savedStateHandle[ProfileDestination.userIdArg] ?: 0
+    var userId: Int =
+        savedStateHandle[ProfileDestination.userIdArg]!!
 
     private val _userMealHistoryUiState = MutableStateFlow(MealHistoryUiState())
     val userMealHistoryUiState: StateFlow<MealHistoryUiState> = _userMealHistoryUiState
@@ -87,6 +87,10 @@ class UserMealHistoryViewModel(private val userMealHistoryRepository: UserMealHi
                      _userMealHistoryUiState.value = it
                  }
          }
+    }
+
+    suspend fun addMealToHistory(userId: Int, mealId: Int, date: String) {
+        userMealHistoryRepository.insert(UserMealHistory(userId = userId, mealId = mealId, timestamp = date))
     }
 
 }

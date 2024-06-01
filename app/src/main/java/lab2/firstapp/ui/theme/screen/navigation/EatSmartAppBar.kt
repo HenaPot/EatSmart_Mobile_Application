@@ -3,14 +3,11 @@ package lab2.firstapp.ui.theme.screen.navigation
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -63,7 +60,7 @@ fun EatSmartAppBar(
 //@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EatSmartBottomBar(
-    navigateToBrowseMealScreen: () -> Unit,
+    navigateToBrowseMealScreen: (Int) -> Unit,
     navigateToCaloriesScreen: (Int) -> Unit,
     navigateToProfileScreen:(Int) -> Unit,
     viewModel: UserViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -77,7 +74,7 @@ fun EatSmartBottomBar(
         Spacer(modifier = Modifier.width(100.dp))
 
         IconButton(
-            onClick = {navigateToBrowseMealScreen()}
+            onClick = {navigateToBrowseMealScreen(viewModel.userId)}
         ) {
             Icon(imageVector = Icons.Default.Home, contentDescription = "Home")
         }

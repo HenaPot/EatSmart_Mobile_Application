@@ -81,7 +81,7 @@ object CaloriesDestination: NavigationDestination {
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CalorieScreenWithAppBar(
-    navigateToBrowseMealScreen: () -> Unit,
+    navigateToBrowseMealScreen: (Int) -> Unit,
     navigateBack: () -> Unit,
     navigateToCaloriesScreen: (Int) -> Unit = {},
     navigateToProfileScreen: (Int) -> Unit,
@@ -100,7 +100,7 @@ fun CalorieScreenWithAppBar(
 @Composable
 fun CalorieScreen(
     //when you want to change user you must also change userId in the viewModel, it is hardcoded
-    navigateToBrowseMealScreen: () -> Unit,
+    navigateToBrowseMealScreen: (Int) -> Unit,
     date: String = getTodayDateString(),
     viewModel: UserMealHistoryViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ){
@@ -193,7 +193,7 @@ fun CalorieScreen(
                 DropdownMenuItem(
                     text = { Text(text = "Add meal")},
                     onClick = {/*NAVIGATE TO MEALS SCREEN*/
-                        navigateToBrowseMealScreen()
+                        navigateToBrowseMealScreen(viewModel.userId)
                     }
                 )
 

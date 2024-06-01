@@ -53,6 +53,8 @@ import lab2.firstapp.ui.theme.screen.navigation.NavigationDestination
 import lab2.firstapp.ui.theme.sendNotification
 import lab2.firstapp.viewModel.AppViewModelProvider
 import lab2.firstapp.viewModel.LoginRegistrationViewModel
+import lab2.firstapp.viewModel.UserMealHistoryViewModel
+import lab2.firstapp.viewModel.UserViewModel
 
 
 object LoginDestination: NavigationDestination {
@@ -86,6 +88,8 @@ fun LoginScreenWithTopBar(
 fun LoginScreen(
     context: Context,
     viewModel: LoginRegistrationViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    //userViewModel: UserViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    //historyViewModel: UserMealHistoryViewModel = viewModel(factory = AppViewModelProvider.Factory),
     navigateToRegister: () -> Unit,
     navigateToProfilePage: (Int) -> Unit
     ) {
@@ -221,6 +225,8 @@ fun LoginScreen(
                 // LOGIN DOES NOT WORK AND NEVER SHOWS UP IN LOGCAT
                 // pre login shows in logcat and logs user's input
                 if(viewModel.login()){
+                    //userViewModel.userId = viewModel.userUiState.userDetails.id
+                    //historyViewModel.userId = viewModel.userUiState.userDetails.id
                     Log.d("login", viewModel.userUiState.toString())
                     navigateToProfilePage(viewModel.userUiState.userDetails.id)
                 }

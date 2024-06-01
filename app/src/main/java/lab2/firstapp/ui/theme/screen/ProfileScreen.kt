@@ -42,7 +42,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -62,7 +61,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -90,7 +88,7 @@ object ProfileDestination: NavigationDestination {
 fun ProfileScreenWithTopBar(
     navigateBack: () -> Unit,
     navigateToPreferences: (Int) -> Unit,
-    navigateToBrowseMealScreen: () -> Unit,
+    navigateToBrowseMealScreen: (Int) -> Unit,
     navigateToCaloriesScreen: (Int) -> Unit,
     navigateToProfileScreen: (Int) -> Unit = {},
     logOut: () -> Unit

@@ -42,22 +42,27 @@ import lab2.firstapp.ui.theme.screen.navigation.EatSmartBottomBar
 import lab2.firstapp.ui.theme.screen.navigation.NavigationDestination
 import lab2.firstapp.viewModel.AllMealsViewModel
 import lab2.firstapp.viewModel.AppViewModelProvider
+import lab2.firstapp.viewModel.UserMealHistoryViewModel
+import lab2.firstapp.viewModel.UserViewModel
 
 object BrowseMealsDestination: NavigationDestination {
     override val route = "Browse Meals"
     override val title = "Browse Meals"
+    const val userIdArg = "userID"
+    val routeWithArgs = "${BrowseMealsDestination.route}/{$userIdArg}"
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun BrowseMealsScreenWithAppBar(
-    navigateToMealScreen: (Int) -> Unit,
+    navigateToMealScreen: (Int, Int) -> Unit,
     navigateBack: () -> Unit,
-    navigateToBrowseMealScreen: () -> Unit,
+    navigateToBrowseMealScreen: (Int) -> Unit,
     navigateToCaloriesScreen: (Int) -> Unit,
     navigateToProfileScreen: (Int) -> Unit,
-    logOut: () -> Unit
-){
+    logOut: () -> Unit,
+
+    ){
     Scaffold(
         topBar = { EatSmartAppBar(titleScreen = BrowseMealsDestination.title, canNavigateBack = true, navigateBack = navigateBack, logOut = logOut) },
         bottomBar = { EatSmartBottomBar(navigateToBrowseMealScreen = navigateToBrowseMealScreen, navigateToCaloriesScreen = navigateToCaloriesScreen, navigateToProfileScreen = navigateToProfileScreen)}
@@ -69,7 +74,7 @@ fun BrowseMealsScreenWithAppBar(
 @Composable
 fun BrowseMealsScreen(
     viewModel: AllMealsViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    navigateToMealScreen: (Int) -> Unit,
+    navigateToMealScreen: (Int, Int) -> Unit,
 ){
     val allMealsUiState by viewModel.allMealsUiState.collectAsState()
     Log.d("all meals", allMealsUiState.mealList.toString())
@@ -99,7 +104,7 @@ fun BrowseMealsScreen(
 
         LazyColumn() {
             items(allMealsUiState.mealList) { meal ->
-                BigMealCard(meal = meal, navigateToMealScreen = navigateToMealScreen)
+                BigMealCard(meal = meal, navigateToMealScreen = navigateToMealScreen, viewModel = viewModel)
             }
         }
         // fix the fact that you cant see button of last card
@@ -108,7 +113,7 @@ fun BrowseMealsScreen(
 }
 
 @Composable
-fun BigMealCard(meal: Meal, navigateToMealScreen: (Int) -> Unit) {
+fun BigMealCard(meal: Meal, navigateToMealScreen: (Int, Int) -> Unit, viewModel: AllMealsViewModel) {
     Card(
         modifier = Modifier
             .wrapContentHeight()
@@ -154,7 +159,7 @@ fun BigMealCard(meal: Meal, navigateToMealScreen: (Int) -> Unit) {
             )
             Spacer(modifier = Modifier.height(10.dp))
             Button(
-                onClick = { navigateToMealScreen(meal.id) },
+                onClick = { navigateToMealScreen(meal.id, viewModel.userId) },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = SecondaryPurple,
                     contentColor = PrimaryRed
