@@ -37,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -130,8 +131,8 @@ fun RegistrationScreen(
 
         Text(
             text = stringResource(id = R.string.registration),
-            fontSize = 30.sp, // SP KAD IMAS FONTOVE
-            fontFamily = FontFamily.Cursive,
+            fontSize = 25.sp, // SP KAD IMAS FONTOVE
+            fontWeight = FontWeight.Light,
             color = Color.Black,
         )
 
