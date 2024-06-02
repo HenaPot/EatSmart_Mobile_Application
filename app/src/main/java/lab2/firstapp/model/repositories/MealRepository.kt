@@ -14,4 +14,6 @@ class MealRepository(private val mealDao: MealDao): BaseRepository<Meal> {
     override fun getOneStream(id: Int): Flow<Meal?> = mealDao.getMealById(id)
 
     fun getAllMeals(): Flow<List<Meal>> = mealDao.getAllMeals()
+
+    suspend fun updateMealImage(mealId: Int, mealImage: Int) = mealDao.updateMealImage(mealId, mealImage)
 }

@@ -25,4 +25,7 @@ interface MealDao {
 
     @Query("SELECT * FROM meals")
     fun getAllMeals(): Flow<List<Meal>>
+
+    @Query("UPDATE meals SET mealImage = :mealImage WHERE id = :mealId ")
+    suspend fun updateMealImage(mealId: Int, mealImage: Int)
 }

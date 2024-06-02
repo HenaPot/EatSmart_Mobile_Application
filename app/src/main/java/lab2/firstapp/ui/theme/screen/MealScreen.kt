@@ -88,10 +88,10 @@ fun MealScreen(
 
         Image(
             //picture will have to be adjusted to draw from DB
-            painter = painterResource(id = R.drawable.meal0),
+            painter = painterResource(id = viewModel.mealUiState.mealDetails.mealImage),
             contentDescription = viewModel.mealUiState.mealDetails.name,
             modifier = Modifier/*.size(115.dp)*/
-                .border(2.dp, Color.White)
+                .border(2.dp, PrimaryRed)
                 .padding(top = 5.dp),
             contentScale = ContentScale.Crop
         )

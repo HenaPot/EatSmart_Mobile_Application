@@ -112,7 +112,6 @@ fun CalorieScreen(
 
     LaunchedEffect(viewModel.userIdArg, date) {
         viewModel.getUsersCaloriesOnDate(viewModel.userIdArg, date)
-        viewModel.getUsersCaloriesOnDate(viewModel.userIdArg, date)
     }
 
     var expandedAddMeal by remember {
@@ -290,7 +289,7 @@ fun MealCard(meal: Meal, viewModel: UserMealHistoryViewModel){
             modifier = Modifier.padding(top = 5.dp, bottom = 5.dp, start = 5.dp, end = 10.dp)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.meal0),
+                painter = painterResource(id = meal.mealImage),
                 contentDescription = meal.name,
                 modifier = Modifier
                     .size(110.dp)

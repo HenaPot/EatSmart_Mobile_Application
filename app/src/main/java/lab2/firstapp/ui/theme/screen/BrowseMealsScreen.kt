@@ -21,8 +21,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +35,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import lab2.firstapp.R
 import lab2.firstapp.model.models.Meal
 import lab2.firstapp.ui.theme.PrimaryRed
@@ -77,6 +81,18 @@ fun BrowseMealsScreen(
     navigateToMealScreen: (Int, Int) -> Unit,
 ){
     val allMealsUiState by viewModel.allMealsUiState.collectAsState()
+
+    /*LaunchedEffect(allMealsUiState.mealList) {
+        // Access the meal list from the repository
+        val mealList = allMealsUiState.mealList
+
+        // Iterate over each meal and update the mealImage
+        mealList.forEach { meal ->
+            val updatedMealImage = R.drawable.meal1 // Example of updated mealImage
+            viewModel.updateMealImage(meal.id, updatedMealImage)
+        }
+    }*/
+
     Log.d("all meals", allMealsUiState.mealList.toString())
 
     Column(
@@ -85,6 +101,7 @@ fun BrowseMealsScreen(
         modifier = Modifier
             .fillMaxSize()
             .wrapContentWidth()
+            .padding(bottom = 90.dp)
     ) {
         Text(
             text = "Healthy Meal Ideas",
@@ -133,7 +150,12 @@ fun BigMealCard(meal: Meal, navigateToMealScreen: (Int, Int) -> Unit, viewModel:
             Spacer(modifier = Modifier.height(20.dp))
 
             Image(
-                painter = painterResource(id = R.drawable.meal0),
+                painter = painterResource(id =
+                if (meal.mealImage == 0){
+                    R.drawable.meal0
+                } else{
+                    meal.mealImage
+                }),
                 contentDescription = meal.name,
                 modifier = Modifier/*.size(115.dp)*/
                     .border(2.dp, Color.White)
