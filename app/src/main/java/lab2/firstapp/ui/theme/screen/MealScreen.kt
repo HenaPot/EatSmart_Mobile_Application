@@ -43,7 +43,7 @@ object MealDestination: NavigationDestination {
     override val route = "meal"
     override val title = "Meal"
     const val mealId = "mealId"
-    const val userId = "userId"
+    const val userId = "userID"
     val routeWithArgs = "$route/{$mealId}/{$userId}"
 }
 
@@ -114,10 +114,10 @@ fun MealScreen(
                 //SEND CALORIES TO THE CALORIE SCREEN AS WELL
                 //viewModel.mealUiState.mealDetails.calories
                 coroutineScope.launch {
-                    historyViewModel.addMealToHistory(historyViewModel.userId, viewModel.mealUiState.mealDetails.id, getTodayDateString())
+                    historyViewModel.addMealToHistory(userId = historyViewModel.userIdArg, mealId = viewModel.mealUiState.mealDetails.id, date =  getTodayDateString())
                 }
 
-                navigateToCalorieScreen(historyViewModel.userId)
+                navigateToCalorieScreen(historyViewModel.userIdArg)
                 /*coroutineScope.launch {
                     historyViewModel.updateMealHistory(8, 2, viewModel.mealUiState.mealDetails.id, "2024-05-20")
                 }*/

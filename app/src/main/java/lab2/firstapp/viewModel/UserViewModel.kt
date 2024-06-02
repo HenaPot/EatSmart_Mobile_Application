@@ -13,11 +13,15 @@ import lab2.firstapp.model.repositories.UserRepository
 import lab2.firstapp.ui.theme.screen.PreferencesDestination
 import lab2.firstapp.ui.theme.screen.ProfileDestination
 
-class UserViewModel(private val userRepository: UserRepository, savedStateHandle: SavedStateHandle): ViewModel() {
+class UserViewModel(private val userRepository: UserRepository, private val savedStateHandle: SavedStateHandle): ViewModel() {
     /*private val userId: Int =
         checkNotNull(savedStateHandle[ProfileDestination.userIdArg])*/
 
-    var userId: Int = savedStateHandle[ProfileDestination.userIdArg]!!
+    var userIdArg: Int = savedStateHandle[ProfileDestination.userIdArg]!!
+
+    /*val userId: Int
+        get() = savedStateHandle.get<Int>(ProfileDestination.userIdArg) ?: throw IllegalArgumentException("Missing userId")*/
+
 
 
     var userUiState by mutableStateOf(UserUiState())
@@ -25,7 +29,7 @@ class UserViewModel(private val userRepository: UserRepository, savedStateHandle
 
     init {
         viewModelScope.launch {
-            userUiState = userRepository.getOneStream(userId)
+            userUiState = userRepository.getOneStream(userIdArg)
                 .filterNotNull()
                 .first()
                 .toUserUiState(true)

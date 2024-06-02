@@ -93,6 +93,17 @@ fun EatSmartNavHost(
                 }
             )
         ){
+            backStackEntry ->
+            val mealId = backStackEntry.arguments?.getInt(MealDestination.mealId) ?: 0
+            val userId = backStackEntry.arguments?.getInt(MealDestination.userId) ?: 0
+
+            if (userId == 0) {
+                throw IllegalArgumentException("Missing userId")
+            }
+            if (mealId == 0) {
+                throw IllegalArgumentException("Missing mealId")
+
+            }
             MealScreenWithAppBar(
                 navigateToBrowseMealScreen = { navController.navigate("${BrowseMealsDestination.route}/${it}") },
                 navigateBack = { navController.navigateUp() },

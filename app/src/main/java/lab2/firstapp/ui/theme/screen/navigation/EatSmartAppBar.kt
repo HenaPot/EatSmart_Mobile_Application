@@ -74,7 +74,7 @@ fun EatSmartBottomBar(
         Spacer(modifier = Modifier.width(100.dp))
 
         IconButton(
-            onClick = {navigateToBrowseMealScreen(viewModel.userId)}
+            onClick = {navigateToBrowseMealScreen(viewModel.userIdArg)}
         ) {
             Icon(imageVector = Icons.Default.Home, contentDescription = "Home")
         }
@@ -82,7 +82,7 @@ fun EatSmartBottomBar(
         Spacer(modifier = Modifier.width(25.dp))
 
         IconButton(
-            onClick = { navigateToCaloriesScreen(viewModel.userId) }
+            onClick = { navigateToCaloriesScreen(viewModel.userIdArg) }
         ) {
              Icon(painter = painterResource(id = R.drawable.calorie_counter), contentDescription = null, modifier = Modifier.size(23.dp))
         }
@@ -90,7 +90,7 @@ fun EatSmartBottomBar(
         Spacer(modifier = Modifier.width(25.dp))
 
         IconButton(
-            onClick = { navigateToProfileScreen(viewModel.userId) }
+            onClick = { navigateToProfileScreen(viewModel.userIdArg) }
         ) {
             Icon(imageVector = Icons.Default.AccountCircle, contentDescription = "Profile")
         }

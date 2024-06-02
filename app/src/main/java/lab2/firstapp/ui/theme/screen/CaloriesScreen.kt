@@ -107,9 +107,9 @@ fun CalorieScreen(
     val mealHistoryUiState by viewModel.userMealHistoryUiState.collectAsState()
     val totalCalories = viewModel.totalCalories.collectAsState()
 
-    LaunchedEffect(viewModel.userId, date) {
-        viewModel.getUsersCaloriesOnDate(viewModel.userId, date)
-        viewModel.getUsersCaloriesOnDate(viewModel.userId, date)
+    LaunchedEffect(viewModel.userIdArg, date) {
+        viewModel.getUsersCaloriesOnDate(viewModel.userIdArg, date)
+        viewModel.getUsersCaloriesOnDate(viewModel.userIdArg, date)
     }
 
     var expandedAddMeal by remember {
@@ -193,7 +193,7 @@ fun CalorieScreen(
                 DropdownMenuItem(
                     text = { Text(text = "Add meal")},
                     onClick = {/*NAVIGATE TO MEALS SCREEN*/
-                        navigateToBrowseMealScreen(viewModel.userId)
+                        navigateToBrowseMealScreen(viewModel.userIdArg)
                     }
                 )
 
@@ -225,8 +225,8 @@ fun CalorieScreen(
 
                             //viewModel
                             coroutineScope.launch {
-                                viewModel.getUserHistory(viewModel.userId, mutableDate)
-                                viewModel.getUsersCaloriesOnDate(viewModel.userId, mutableDate)
+                                viewModel.getUserHistory(viewModel.userIdArg, mutableDate)
+                                viewModel.getUsersCaloriesOnDate(viewModel.userIdArg, mutableDate)
                             }
 
                         }
