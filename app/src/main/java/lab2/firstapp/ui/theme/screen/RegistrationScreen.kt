@@ -177,7 +177,7 @@ fun RegistrationScreen(
             value = email,
             onValueChange = {
                 email = it;
-                viewModel.updateUiState(detailsState.copy(email = it))
+                viewModel.updateUiState(detailsState.copy(email = it.trim()))
                             },
             isError = !checkEmail,
             enabled = true,
