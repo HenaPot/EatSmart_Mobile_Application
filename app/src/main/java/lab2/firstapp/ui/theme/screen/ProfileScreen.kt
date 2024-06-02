@@ -1,7 +1,11 @@
 package lab2.firstapp.ui.theme.screen
 
+import android.Manifest
+import coil.compose.rememberImagePainter
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -11,6 +15,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -48,6 +53,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -63,16 +70,22 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import kotlinx.coroutines.launch
 import lab2.firstapp.R
 import lab2.firstapp.model.Gender
+import lab2.firstapp.model.models.User
 import lab2.firstapp.ui.theme.PrimaryRed
 import lab2.firstapp.ui.theme.screen.navigation.EatSmartAppBar
 import lab2.firstapp.ui.theme.screen.navigation.EatSmartBottomBar
 import lab2.firstapp.ui.theme.screen.navigation.NavigationDestination
 import lab2.firstapp.viewModel.AppViewModelProvider
 import lab2.firstapp.viewModel.UserViewModel
+import lab2.firstapp.viewModel.toUser
+import java.io.FileNotFoundException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 
@@ -82,6 +95,7 @@ object ProfileDestination: NavigationDestination {
     const val userIdArg = "userID"
     val routeWithArgs = "$route/{$userIdArg}"
 }
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -148,7 +162,15 @@ fun ProfileScreen(
     ) {
         Spacer(modifier = Modifier.height(15.dp))
 
-        ProfileImage()
+        ProfileImage(
+            user = viewModel.userUiState.userDetails.toUser(),
+            onProfilePictureChange = {
+                viewModel.updateUiState(detailsState.copy(profilePicture = it));
+                coroutineScope.launch {
+                    viewModel.updateUser()
+                }
+            }
+        )
 
         Spacer(modifier = Modifier.size(width = 0.dp, height = 30.dp))
 
@@ -391,60 +413,131 @@ fun formatDateFromString(date: String): String {
     //val dateString: String = formatter.format(state.selectedDateMillis)
     return "${LocalDate.parse(date).year} ${LocalDate.parse(date).month.toString()} ${LocalDate.parse(date).dayOfMonth.toString()}"
 }
+
 @Composable
-fun ProfileImage() {
+fun ProfileImage(
+    user: User,
+    onProfilePictureChange: (String) -> Unit // Callback to update profile picture in User entity
+) {
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
 
-
     val context = LocalContext.current
 
+    // Initialize imageUri with the saved profile picture URI
+    LaunchedEffect(user.profilePicture) {
+        user.profilePicture?.let {
+            imageUri = Uri.parse(it)
+            loadBitmapFromUri(context, imageUri, bitmap)
+        }
+    }
 
     val launcher = rememberLauncherForActivityResult(
-        contract =
-        ActivityResultContracts.GetContent()
+        contract = ActivityResultContracts.OpenDocument()
     ) { uri: Uri? ->
         imageUri = uri
-    }
-
-
-    imageUri?.let {
-        if (Build.VERSION.SDK_INT < 28) {
-            bitmap.value = MediaStore.Images
-                .Media.getBitmap(context.contentResolver, it)
-        } else {
-            val source = ImageDecoder
-                .createSource(context.contentResolver, it)
-            bitmap.value = ImageDecoder.decodeBitmap(source)
-
+        imageUri?.let {
+            loadBitmapFromUri(context, it, bitmap)
+            val imagePath = it.toString()
+            onProfilePictureChange(imagePath)
         }
     }
 
-    // BITMAP SE PRETVORI U STRING PA ONDA U BAZU DA SE SPREMI
-    if(bitmap.value != null) {
-        bitmap.value?.let{
-            btm ->
-            Image(bitmap = btm.asImageBitmap(),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(100.dp)
-                .clip(CircleShape)
-                .border(2.dp, PrimaryRed, CircleShape)
-                .clickable { launcher.launch("image/*") }
-                )
+    if (bitmap.value != null) {
+        bitmap.value?.let { btm ->
+            Image(
+                bitmap = btm.asImageBitmap(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, PrimaryRed, CircleShape)
+                    .clickable { launcher.launch(arrayOf("image/*")) }
+            )
         }
-    } else{
+    } else {
         Image(
-            painter = painterResource(id = R.drawable.profile_icon_design_free_vector),
-            contentDescription = "",
+            painter = rememberAsyncImagePainter(
+                ImageRequest.Builder(LocalContext.current)
+                    .data(data = user.profilePicture ?: R.drawable.profile_icon_design_free_vector)
+                    .apply(block = fun ImageRequest.Builder.() {
+                        placeholder(R.drawable.profile_icon_design_free_vector)
+                    }).build()
+            ),
+            contentDescription = null,
             modifier = Modifier
                 .size(100.dp)
                 .clip(CircleShape)
                 .border(2.dp, PrimaryRed, CircleShape)
-                .clickable { launcher.launch("image/*") }
+                .clickable { launcher.launch(arrayOf("image/*")) }
         )
     }
 }
 
+// Helper function to load bitmap from URI
+private fun loadBitmapFromUri(context: Context, uri: Uri?, bitmapState: MutableState<Bitmap?>) {
+    Log.d("ProfileImage", "URI: $uri")
+    uri?.let {
+        try {
+            Log.d("ProfileImage", "Loading image from URI: $uri")
+            val bitmap = if (Build.VERSION.SDK_INT < 28) {
+                MediaStore.Images.Media.getBitmap(context.contentResolver, it)
+            } else {
+                val source = ImageDecoder.createSource(context.contentResolver, it)
+                ImageDecoder.decodeBitmap(source)
+            }
+            bitmapState.value = bitmap
+            Log.d("ProfileImage", "Image loaded successfully")
+        } catch (e: SecurityException) {
+            Log.e("ProfileImage", "Security Exception", e)
+            e.printStackTrace()
+        } catch (e: FileNotFoundException) {
+            Log.e("ProfileImage", "File Not Found Exception", e)
+            e.printStackTrace()
+        } catch (e: Exception) {
+            Log.e("ProfileImage", "Error loading image from URI", e)
+            e.printStackTrace()
+        }
+    }
+}
+
+/*@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+@Composable
+fun RequestPermissions(user: User, onProfilePictureChange: (String) -> Unit) {
+    val context = LocalContext.current
+    val permissions = remember {
+        listOf(
+            Manifest.permission.READ_MEDIA_IMAGES
+        )
+    }
+
+    var hasPermission by remember {
+        mutableStateOf(
+            permissions.all {
+                ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+            }
+        )
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissionsMap ->
+        hasPermission = permissionsMap.values.all { it }
+    }
+
+    LaunchedEffect(Unit) {
+        if (!hasPermission) {
+            launcher.launch(permissions.toTypedArray())
+        }
+    }
+
+    if (hasPermission) {
+        // Your Composable that requires permissions
+        ProfileImage(user, onProfilePictureChange)
+    } else {
+        // Show some UI to indicate permissions are required
+        Text("Permissions are required to access images.")
+    }
+}*/
 

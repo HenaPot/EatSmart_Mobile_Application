@@ -79,4 +79,8 @@ dependencies {
     //VIEWMODEL
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+
+    //COIL IMAGE LIBRARY
+    implementation("io.coil-kt:coil-compose:2.2.2") // Use the latest version
+
 }

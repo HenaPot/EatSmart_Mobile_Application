@@ -51,7 +51,6 @@ data class User(
     val dateOfBirth: String,
 
     @ColumnInfo(name = "profilePicture")
-    @DrawableRes
-    val profilePicture: Int
+    val profilePicture: String? = null // Use String to store URI or path
 
 )

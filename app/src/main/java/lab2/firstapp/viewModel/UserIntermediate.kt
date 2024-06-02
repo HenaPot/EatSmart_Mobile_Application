@@ -1,6 +1,5 @@
 package lab2.firstapp.viewModel
 
-import androidx.annotation.DrawableRes
 import lab2.firstapp.model.ActivityLevel
 import lab2.firstapp.model.DietaryPlan
 import lab2.firstapp.model.FitnessPlan
@@ -22,8 +21,7 @@ data class UserDetails(
     val gender: Gender = Gender.FEMALE,
     val dateOfBirth: String = "1999-05-15",
     // ovo je za sliku
-    @DrawableRes
-    val profilePicture: Int = 0
+    val profilePicture: String? = ""
 )
 
 

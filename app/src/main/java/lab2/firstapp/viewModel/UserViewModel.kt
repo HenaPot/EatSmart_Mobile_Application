@@ -48,4 +48,12 @@ class UserViewModel(private val userRepository: UserRepository, private val save
         userUiState =
             UserUiState(userDetails = userDetails, isEntryValid = false)
     }
+
+    fun updateProfilePicture(newProfilePicture: String) {
+        val updatedUserDetails = userUiState.userDetails.copy(profilePicture = newProfilePicture)
+        userUiState = userUiState.copy(userDetails = updatedUserDetails)
+        viewModelScope.launch {
+            userRepository.update(updatedUserDetails.toUser())
+        }
+    }
 }
