@@ -2,6 +2,7 @@ package lab2.firstapp.ui.theme.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -48,6 +50,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -132,20 +135,24 @@ fun CalorieScreen(
         modifier = Modifier
             .wrapContentWidth()
             .fillMaxSize()
+            .padding(top = 30.dp, bottom = 90.dp)
     ) {
 
         Spacer(modifier = Modifier.height(40.dp))
 
-        Text(
+        /*Text(
             text = "Stay on track!",
-            fontSize = 30.sp,
-            fontFamily = FontFamily.Cursive,
+            fontSize = 20.sp,
+            //fontFamily = FontFamily.Cursive,
             fontWeight = FontWeight.Bold,
             color = PrimaryRed,
             modifier = Modifier.padding(
-                20.dp
+                25.dp
             )
-        )
+        )*/
+
+        //Divider()
+        Spacer(modifier = Modifier.height(30.dp))
 
         Text(text = "Meal Calorie Counter", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = PrimaryRed, modifier = Modifier.padding(top = 20.dp))
         Spacer(modifier = Modifier.height(15.dp))
@@ -205,11 +212,12 @@ fun CalorieScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(75.dp))
+        Spacer(modifier = Modifier.height(60.dp))
         Divider()
+        Spacer(modifier = Modifier.height(30.dp))
 
         TextButton(onClick = {openCalendar = true}) {
-            Text(text = "Choose Date: $mutableDate")
+            Text(text = "Choose Date: $mutableDate", fontWeight = FontWeight.ExtraBold)
         }
 
         if(openCalendar) {

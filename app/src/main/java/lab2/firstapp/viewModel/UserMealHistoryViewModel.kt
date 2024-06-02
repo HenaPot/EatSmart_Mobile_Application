@@ -44,7 +44,7 @@ class UserMealHistoryViewModel(private val userMealHistoryRepository: UserMealHi
     }
 
     suspend fun deleteMealHistory(mealId: Int) {
-        val userMealHistoryFlow = userMealHistoryRepository.getMealHistoryByMealId(mealId)
+        val userMealHistoryFlow = userMealHistoryRepository.getMealHistoryByMealId(mealId =  mealId, userId = userIdArg)
         val userMealHistory = userMealHistoryFlow.firstOrNull()
 
         userMealHistory?.let {

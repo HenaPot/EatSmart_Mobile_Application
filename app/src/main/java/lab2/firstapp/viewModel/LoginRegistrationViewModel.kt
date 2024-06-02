@@ -33,8 +33,16 @@ class LoginRegistrationViewModel(private val userRepository: UserRepository): Vi
         }
     }
 
-    suspend fun register(): Boolean{
+    /*suspend fun register(): Boolean{
         if(validateInput()){
+            userRepository.insert(userUiState.userDetails.toUser())
+            login()
+            return true
+        }else return false
+    }*/
+
+    suspend fun register(): Boolean{
+        if(validateInput2()){
             userRepository.insert(userUiState.userDetails.toUser())
             login()
             return true
@@ -50,6 +58,16 @@ class LoginRegistrationViewModel(private val userRepository: UserRepository): Vi
     private suspend fun checkEmail(): Boolean{
         return userRepository.getUserByEmail(userUiState.userDetails.email).first()
             ?.toUserUiState()?.userDetails?.email?.isEmpty() ?: true
+    }
+
+    private suspend fun checkEmail2(uiState: UserDetails ): Boolean {
+        return userRepository.getUserByEmail(uiState.email).first()
+            ?.toUserUiState()?.userDetails?.email?.equals("") ?: true
+    }
+    private suspend fun validateInput2(uiState: UserDetails = userUiState.userDetails): Boolean {
+        return with(uiState) {
+            checkEmail2(uiState)
+        }
     }
 
 }

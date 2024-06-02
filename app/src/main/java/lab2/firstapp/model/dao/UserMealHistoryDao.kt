@@ -35,9 +35,9 @@ interface UserMealHistoryDao {
     fun getMealHistoryOfUser(userId: Int, date: String): Flow<List<Meal>>
 
     @Query("SELECT users_meals_history.* FROM users_meals_history " +
-            "JOIN meals ON users_meals_history.meal_id = meals.id " +
+            "JOIN meals ON users_meals_history.meal_id = meals.id AND users_meals_history.user_id = :userId " +
             "WHERE meals.id = :mealId")
-    fun getMealHistoryByMealId(mealId: Int): Flow<UserMealHistory?>
+    fun getMealHistoryByMealId(mealId: Int, userId: Int): Flow<UserMealHistory?>
 
     @Query("SELECT SUM(meals.calories) as total_calories" +
             " FROM meals " +

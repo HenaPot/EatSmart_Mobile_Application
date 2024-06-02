@@ -118,9 +118,16 @@ fun PreferenceScreen(
     ) {
         Text(
             text = "Preferences",
-            fontSize = 30.sp,
-            fontFamily = FontFamily.Cursive,
+            fontSize = 25.sp,
+            //fontFamily = FontFamily.Cursive,
             fontWeight = FontWeight.Bold,
+            color = PrimaryRed
+        )
+        Text(
+            text = "For tailored experience",
+            fontSize = 16.sp,
+            //fontFamily = FontFamily.Cursive,
+            //fontWeight = FontWeight.Bold,
             color = PrimaryRed
         )
 

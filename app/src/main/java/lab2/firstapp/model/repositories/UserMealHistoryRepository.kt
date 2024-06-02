@@ -18,8 +18,8 @@ class UserMealHistoryRepository(private val userMealHistoryDao: UserMealHistoryD
     fun getMealHistoryOfUser(userId: Int, date: String): Flow<List<Meal>>
         = userMealHistoryDao.getMealHistoryOfUser(userId, date)
 
-    fun getMealHistoryByMealId(mealId: Int): Flow<UserMealHistory?>
-        = userMealHistoryDao.getMealHistoryByMealId(mealId = mealId)
+    fun getMealHistoryByMealId(mealId: Int, userId: Int): Flow<UserMealHistory?>
+        = userMealHistoryDao.getMealHistoryByMealId(mealId = mealId, userId)
 
     fun getUsersCaloriesOnDate(userId: Int, date: String): Flow<String?>
         = userMealHistoryDao.getUsersCaloriesOnDate(userId, date)

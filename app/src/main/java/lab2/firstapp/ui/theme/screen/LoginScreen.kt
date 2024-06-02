@@ -137,8 +137,9 @@ fun LoginScreen(
         Text(
             text = stringResource(id = R.string.app_name),
             fontSize = 30.sp,
-            fontFamily = FontFamily.Cursive,
+            //fontFamily = FontFamily.Cursive,
             color = Color.Black,
+            fontWeight = FontWeight.Light
         )
 
         Spacer(modifier = Modifier.size(width = 0.dp, height = 25.dp))
